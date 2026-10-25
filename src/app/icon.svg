@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
+  <title>NX Mesos Converter</title>
+  <defs>
+    <linearGradient id="coin" x1="12" y1="8" x2="52" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FBD26A" />
+      <stop offset="0.5" stop-color="#F5A73B" />
+      <stop offset="1" stop-color="#F07A25" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="#F4FBFF" />
+  <circle cx="32" cy="32" r="23" fill="url(#coin)" />
+  <circle cx="32" cy="32" r="18" fill="none" stroke="#8A4009" stroke-opacity="0.4" stroke-width="2" />
+  <path d="M23 43V21h5l9 13V21h5v22h-5l-9-13v13z" fill="#713708" />
+</svg>

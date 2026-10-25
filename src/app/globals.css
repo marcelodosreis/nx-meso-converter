@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans:
+    var(--font-nunito), var(--font-noto-korean), ui-rounded, "Nunito", ui-sans-serif, system-ui,
+    sans-serif;
+  --font-display:
+    var(--font-fredoka), var(--font-noto-korean), ui-rounded, "Fredoka", ui-sans-serif, system-ui,
+    sans-serif;
+
+  --color-maple-ink: #18344a;
+  --color-maple-muted: #5b7182;
+  --color-maple-orange: #e47b1f;
+  --color-maple-orange-dark: #a5480b;
+  --color-maple-orange-deep: #8f3d07;
+  --color-maple-gold: #f2bf4b;
+  --color-maple-paper: #fffdf8;
+
+  --shadow-card:
+    0 40px 90px -62px rgb(24 52 74 / 0.62), 0 18px 44px -38px rgb(24 52 74 / 0.32),
+    inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --shadow-control: 0 10px 24px -20px rgb(24 52 74 / 0.5);
+}
+
+@layer base {
+  html {
+    min-width: 320px;
+    background-color: #e8f6ff;
+  }
+
+  body {
+    min-height: 100dvh;
+    overflow-x: clip;
+    background-color: #f2faff;
+    background-image:
+      radial-gradient(ellipse 70% 48% at 50% -12%, rgb(255 255 255 / 0.96) 0%, transparent 68%),
+      radial-gradient(circle at 8% 4%, rgb(255 255 255 / 0.7) 0%, transparent 28%),
+      radial-gradient(circle at 88% -4%, rgb(242 191 75 / 0.18) 0%, transparent 34%),
+      linear-gradient(180deg, #ddf2ff 0%, #f6fbff 46%, #fff8ed 100%);
+    color: var(--color-maple-ink);
+  }
+
+  body::before {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      radial-gradient(ellipse 22rem 7rem at 4% 20%, rgb(255 255 255 / 0.5), transparent 70%),
+      radial-gradient(ellipse 30rem 9rem at 96% 34%, rgb(255 255 255 / 0.32), transparent 72%);
+    content: "";
+    pointer-events: none;
+  }
+
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background-color: #f7d98a;
+    color: #17334d;
+  }
+
+  :where(button, input, summary):focus-visible {
+    outline: 3px solid #9c4308;
+    outline-offset: 3px;
+  }
+}
+
+.calculator-surface {
+  border: 1px solid rgb(255 255 255 / 0.96);
+  border-radius: 1.75rem;
+  background-color: rgb(255 253 248 / 0.95);
+  box-shadow: var(--shadow-card);
+}
+
+.settings-dialog {
+  background-color: var(--color-maple-paper);
+}
+
+.settings-dialog::backdrop {
+  background-color: rgb(15 34 48 / 0.38);
+  backdrop-filter: blur(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root body *,
+  :root body *::before,
+  :root body *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    scroll-behavior: auto;
+    transition-duration: 0.01ms;
+  }
+}
