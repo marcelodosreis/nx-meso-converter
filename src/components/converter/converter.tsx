@@ -93,7 +93,13 @@ export function Converter() {
   return (
     <>
       <div className="calculator-surface">
-        <div className="grid md:grid-cols-[minmax(0,1.55fr)_minmax(16rem,1fr)]">
+        <div
+          className={`grid ${
+            currencyEnabled
+              ? "md:grid-cols-[minmax(0,1.55fr)_minmax(18rem,1fr)]"
+              : "md:grid-cols-[minmax(0,1fr)_minmax(15rem,24%)]"
+          }`}
+        >
           <section aria-labelledby="converter-input-title" className="min-w-0 p-4 sm:p-5">
             <h2 id="converter-input-title" className="sr-only">
               {messages.amount.inputSectionTitle}
@@ -110,15 +116,18 @@ export function Converter() {
             />
           </section>
 
-          <ExchangeRateCard
-            rateText={rateText}
-            error={activeRateError}
-            currencyEnabled={currencyEnabled}
-            onChange={updateRateText}
-            onRestoreDefault={restoreDefault}
-            onToggleCurrency={handleToggleCurrency}
-            className="min-w-0 border-t border-sky-100/80 md:border-l md:border-t-0"
-          />
+          <div className="min-w-0 border-t border-sky-100/80 md:border-l md:border-t-0">
+            <ExchangeRateCard
+              rateText={rateText}
+              rate={rate}
+              error={exchangeRateError}
+              currencyEnabled={currencyEnabled}
+              onChange={updateRateText}
+              onRestoreDefault={restoreDefault}
+              onToggleCurrency={handleToggleCurrency}
+              className="min-w-0"
+            />
+          </div>
         </div>
 
         <div className="border-t border-sky-100/80">

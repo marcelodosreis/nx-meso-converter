@@ -61,6 +61,7 @@ export type Messages = Readonly<{
     note: string;
     description: string;
     disabledDescription: string;
+    reference: string;
     disabled: string;
     hide: string;
     show: string;
@@ -192,6 +193,7 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         note: "Salva neste navegador.",
         description: "Conversão opcional para a moeda local.",
         disabledDescription: "Desativada e oculta dos resultados.",
+        reference: "Referência rápida",
         disabled: "Desativada",
         hide: "Ocultar moeda",
         show: "Mostrar moeda",
@@ -312,6 +314,7 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         note: "Saved in this browser.",
         description: "Optional conversion to the local currency.",
         disabledDescription: "Disabled and hidden from the results.",
+        reference: "Quick reference",
         disabled: "Disabled",
         hide: "Hide currency",
         show: "Show currency",
@@ -431,6 +434,7 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         note: "이 브라우저에 저장됩니다.",
         description: "현지 화폐로의 선택적 변환입니다.",
         disabledDescription: "비활성화되어 결과에서 숨겨집니다.",
+        reference: "빠른 참조",
         disabled: "비활성화",
         hide: "화폐 숨기기",
         show: "화폐 표시",
