@@ -6,7 +6,7 @@ import { useLocale } from "@/i18n/locale-provider";
 import { LanguageSwitcher } from "./language-switcher";
 
 type AppHeaderProps = Readonly<{
-  onOpenSettings: () => void;
+  onOpenSettings?: () => void;
 }>;
 
 export function AppHeader({ onOpenSettings }: AppHeaderProps) {
@@ -26,17 +26,14 @@ export function AppHeader({ onOpenSettings }: AppHeaderProps) {
         </span>
 
         <div className="min-w-0">
-          <h1
-            aria-label={APP_NAME}
-            className="truncate font-display text-[1.0625rem] font-semibold leading-tight tracking-tight text-maple-ink sm:text-[1.45rem] lg:text-[1.9rem]"
-          >
+          <p className="truncate font-display text-[1.0625rem] font-semibold leading-tight tracking-tight text-maple-ink sm:text-[1.45rem] lg:text-[1.9rem]">
             <span aria-hidden="true" className="sm:hidden">
               NX Mesos
             </span>
             <span aria-hidden="true" className="hidden sm:inline">
               {APP_NAME}
             </span>
-          </h1>
+          </p>
           <p className="mt-0.5 hidden text-xs font-semibold text-maple-muted sm:block lg:text-sm">
             {messages.header.tagline}
           </p>
@@ -44,15 +41,17 @@ export function AppHeader({ onOpenSettings }: AppHeaderProps) {
       </div>
 
       <div className="flex shrink-0 items-center gap-1.5">
-        <button
-          type="button"
-          onClick={onOpenSettings}
-          aria-label={messages.settings.open}
-          title={messages.settings.open}
-          className="flex size-9 items-center justify-center rounded-xl border border-white/90 bg-white/75 text-sky-900 shadow-sm backdrop-blur-sm transition-colors hover:border-sky-200 hover:bg-white lg:size-11"
-        >
-          <Settings2 aria-hidden="true" strokeWidth={2.4} className="size-4 lg:size-[18px]" />
-        </button>
+        {onOpenSettings === undefined ? null : (
+          <button
+            type="button"
+            onClick={onOpenSettings}
+            aria-label={messages.settings.open}
+            title={messages.settings.open}
+            className="flex size-9 items-center justify-center rounded-xl border border-white/90 bg-white/75 text-sky-900 shadow-sm backdrop-blur-sm transition-colors hover:border-sky-200 hover:bg-white lg:size-11"
+          >
+            <Settings2 aria-hidden="true" strokeWidth={2.4} className="size-4 lg:size-[18px]" />
+          </button>
+        )}
         <LanguageSwitcher />
       </div>
     </header>

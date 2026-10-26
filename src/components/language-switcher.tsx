@@ -6,11 +6,11 @@ import { useLocale } from "@/i18n/locale-provider";
 import { LOCALE_DEFINITIONS, LOCALES, type Locale } from "@/i18n/locales";
 
 export function LanguageSwitcher() {
-  const { locale, messages, setLocale } = useLocale();
+  const { locale, messages, localeHrefs, rememberLocale } = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const activeOptionRef = useRef<HTMLButtonElement>(null);
+  const activeOptionRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     if (!isOpen) {
@@ -56,10 +56,9 @@ export function LanguageSwitcher() {
     };
   }, [isOpen]);
 
-  function selectLocale(nextLocale: Locale) {
-    setLocale(nextLocale);
+  function handleSelect(nextLocale: Locale) {
+    rememberLocale(nextLocale);
     setIsOpen(false);
-    triggerRef.current?.focus();
   }
 
   return (
@@ -86,18 +85,19 @@ export function LanguageSwitcher() {
         <fieldset
           id="language-options"
           aria-label={messages.language.label}
-          className="absolute right-0 top-full z-30 mt-1.5 w-40 rounded-xl border border-sky-100 bg-white p-1 shadow-xl"
+          className="absolute right-0 top-full z-30 mt-1.5 w-44 rounded-xl border border-sky-100 bg-white p-1 shadow-xl"
         >
           {LOCALES.map((option) => {
             const isActive = option === locale;
 
             return (
-              <button
+              <a
                 key={option}
                 ref={isActive ? activeOptionRef : null}
-                type="button"
-                aria-pressed={isActive}
-                onClick={() => selectLocale(option)}
+                href={localeHrefs[option]}
+                hrefLang={LOCALE_DEFINITIONS[option].htmlLang}
+                aria-current={isActive ? "page" : undefined}
+                onClick={() => handleSelect(option)}
                 className={`flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-left text-xs font-bold transition-colors ${
                   isActive
                     ? "bg-amber-50 font-extrabold text-maple-orange-dark ring-1 ring-inset ring-amber-200/80"
@@ -105,7 +105,7 @@ export function LanguageSwitcher() {
                 }`}
               >
                 <span>{LOCALE_DEFINITIONS[option].name}</span>
-              </button>
+              </a>
             );
           })}
         </fieldset>

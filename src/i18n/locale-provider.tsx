@@ -1,71 +1,49 @@
 "use client";
 
-import { createContext, type ReactNode, useContext, useEffect, useRef, useState } from "react";
-import {
-  readStoredLocale,
-  writeStoredLocale,
-} from "@/infrastructure/persistence/locale.repository";
-import {
-  DEFAULT_LOCALE,
-  detectPreferredLocale,
-  isLocale,
-  LOCALE_DEFINITIONS,
-  type Locale,
-  type LocaleDefinition,
-} from "./locales";
+import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
+import { writeStoredLocale } from "@/infrastructure/persistence/locale.repository";
+import { DEFAULT_LOCALE, LOCALE_DEFINITIONS, type Locale, type LocaleDefinition } from "./locales";
 
 type LocaleContextValue = LocaleDefinition & {
-  setLocale: (locale: Locale) => void;
+  localeHrefs: Readonly<Record<Locale, string>>;
+  rememberLocale: (locale: Locale) => void;
+};
+
+type LocaleProviderProps = Readonly<{
+  children: ReactNode;
+  initialLocale?: Locale;
+  localeHrefs?: Readonly<Record<Locale, string>>;
+}>;
+
+const defaultLocaleHrefs: Record<Locale, string> = {
+  pt: "/",
+  en: "/en",
+  ko: "/ko",
 };
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
-export function LocaleProvider({ children }: Readonly<{ children: ReactNode }>) {
-  const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
-  const hasSelectedLocale = useRef(false);
+export function LocaleProvider({
+  children,
+  initialLocale = DEFAULT_LOCALE,
+  localeHrefs = defaultLocaleHrefs,
+}: LocaleProviderProps) {
+  const [locale, setLocaleState] = useState<Locale>(initialLocale);
   const definition = LOCALE_DEFINITIONS[locale];
 
   useEffect(() => {
-    if (hasSelectedLocale.current) {
-      return;
-    }
-
-    const queryLocale = new URLSearchParams(window.location.search).get("lang");
-    const storedLocale = readStoredLocale();
-    const preferredLocale = isLocale(queryLocale)
-      ? queryLocale
-      : (storedLocale ?? detectPreferredLocale(navigator.languages));
-
-    if (preferredLocale !== null) {
-      setLocaleState(preferredLocale);
-
-      if (storedLocale === null) {
-        writeStoredLocale(preferredLocale);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
     document.documentElement.lang = definition.htmlLang;
-    const metaDescription = document.querySelector('meta[name="description"]');
+  }, [definition.htmlLang]);
 
-    if (metaDescription instanceof HTMLMetaElement) {
-      metaDescription.content = definition.messages.metaDescription;
-    }
-  }, [definition.htmlLang, definition.messages.metaDescription]);
-
-  function setLocale(nextLocale: Locale) {
-    hasSelectedLocale.current = true;
+  function rememberLocale(nextLocale: Locale) {
     setLocaleState(nextLocale);
     writeStoredLocale(nextLocale);
-
-    const url = new URL(window.location.href);
-    url.searchParams.set("lang", nextLocale);
-    window.history.replaceState(null, "", url);
   }
 
   return (
-    <LocaleContext.Provider value={{ ...definition, setLocale }}>{children}</LocaleContext.Provider>
+    <LocaleContext.Provider value={{ ...definition, localeHrefs, rememberLocale }}>
+      {children}
+    </LocaleContext.Provider>
   );
 }
 

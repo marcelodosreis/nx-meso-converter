@@ -22,12 +22,16 @@ import { ExchangeRateCard } from "./exchange-rate-card";
 import { useCopyFeedback } from "./use-copy-feedback";
 import { useExchangeRate } from "./use-exchange-rate";
 
-export function Converter() {
+type ConverterProps = Readonly<{
+  initialSourceUnit?: SourceUnit;
+}>;
+
+export function Converter({ initialSourceUnit = "nx" }: ConverterProps) {
   const { messages, numberFormat } = useLocale();
   const { rates } = useConversionSettings();
   const intlLocale = numberFormat.intlLocale;
   const [amountCanonical, setAmountCanonical] = useState("");
-  const [sourceUnit, setSourceUnit] = useState<SourceUnit>("nx");
+  const [sourceUnit, setSourceUnit] = useState<SourceUnit>(initialSourceUnit);
   const [currencyEnabled, setCurrencyEnabled] = useState(true);
   const {
     rateText,
