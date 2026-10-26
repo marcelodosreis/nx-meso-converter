@@ -3,6 +3,7 @@
 import { Check, Share2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { COPY_FEEDBACK_DURATION_MS } from "@/config/app.constants";
+import { SHARE_PATHS } from "@/config/share";
 import { useLocale } from "@/i18n/locale-provider";
 import { copyText } from "@/lib/copy-text";
 import { SCENARIO_URL_FLUSH_EVENT } from "@/lib/scenario-url";
@@ -10,7 +11,7 @@ import { SCENARIO_URL_FLUSH_EVENT } from "@/lib/scenario-url";
 type ShareFeedback = "copied" | "failed" | null;
 
 export function ShareButton() {
-  const { messages } = useLocale();
+  const { locale, messages } = useLocale();
   const [feedback, setFeedback] = useState<ShareFeedback>(null);
   const timeoutRef = useRef<number | null>(null);
 
@@ -25,7 +26,11 @@ export function ShareButton() {
   async function handleShare() {
     window.dispatchEvent(new Event(SCENARIO_URL_FLUSH_EVENT));
 
-    const didCopy = await copyText(window.location.href);
+    const shareUrl = new URL(
+      `${SHARE_PATHS[locale]}${window.location.search}`,
+      window.location.origin,
+    ).toString();
+    const didCopy = await copyText(shareUrl);
 
     if (timeoutRef.current !== null) {
       window.clearTimeout(timeoutRef.current);

@@ -1,13 +1,21 @@
 import { ImageResponse } from "next/og";
+import { DEFAULT_LOCALE, isLocale } from "@/i18n/locales";
+import { buildSharePreview } from "@/lib/share-preview";
 
-export const alt = "NX Mesos Converter — MapleStory calculator with adjustable rates";
-export const size = {
+export const dynamic = "force-dynamic";
+
+const IMAGE_SIZE = {
   width: 1200,
   height: 630,
 };
-export const contentType = "image/png";
 
-export default function Image() {
+export function GET(request: Request) {
+  const url = new URL(request.url);
+  const requestedLocale = url.searchParams.get("locale");
+  const locale =
+    requestedLocale !== null && isLocale(requestedLocale) ? requestedLocale : DEFAULT_LOCALE;
+  const preview = buildSharePreview(locale, url.search);
+
   return new ImageResponse(
     <div
       style={{
@@ -19,7 +27,7 @@ export default function Image() {
         background: "radial-gradient(circle at 20% 0%, #ffffff 0%, #e8f5ff 45%, #fff7e6 100%)",
         color: "#17334d",
         fontFamily: "sans-serif",
-        padding: "56px",
+        padding: "44px",
       }}
     >
       <div
@@ -33,7 +41,7 @@ export default function Image() {
           borderRadius: "40px",
           background: "rgba(255,253,248,0.94)",
           boxShadow: "0 30px 80px -40px rgba(23,51,77,0.45)",
-          padding: "52px 56px",
+          padding: "40px 48px",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -41,9 +49,9 @@ export default function Image() {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "16px",
+              gap: "12px",
               color: "#a5480b",
-              fontSize: "20px",
+              fontSize: "18px",
               fontWeight: 700,
               letterSpacing: "0.12em",
               textTransform: "uppercase",
@@ -54,12 +62,12 @@ export default function Image() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                width: "62px",
-                height: "62px",
-                borderRadius: "20px",
+                width: "52px",
+                height: "52px",
+                borderRadius: "16px",
                 background: "linear-gradient(135deg, #fbd26a 0%, #f5a73b 55%, #f07a25 100%)",
                 color: "#713708",
-                fontSize: "28px",
+                fontSize: "23px",
                 fontWeight: 800,
               }}
             >
@@ -73,25 +81,25 @@ export default function Image() {
               borderRadius: "999px",
               background: "#fff3d8",
               color: "#8a4009",
-              fontSize: "18px",
+              fontSize: "16px",
               fontWeight: 700,
               letterSpacing: "0.06em",
-              padding: "10px 18px",
+              padding: "8px 15px",
             }}
           >
             ADJUSTABLE RATES
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "44px" }}>
-          <div style={{ display: "flex", flexDirection: "column", flex: 1, gap: "16px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "36px" }}>
+          <div style={{ display: "flex", flexDirection: "column", flex: 1, gap: "14px" }}>
             <div
               style={{
                 display: "flex",
-                fontSize: "68px",
+                fontSize: "52px",
                 fontWeight: 700,
-                letterSpacing: "-0.04em",
-                lineHeight: 1.02,
+                letterSpacing: "-0.03em",
+                lineHeight: 1.05,
               }}
             >
               NX Mesos Converter
@@ -99,7 +107,7 @@ export default function Image() {
             <div
               style={{
                 display: "flex",
-                fontSize: "28px",
+                fontSize: "23px",
                 color: "#5b7182",
                 lineHeight: 1.35,
               }}
@@ -111,60 +119,19 @@ export default function Image() {
           <div
             style={{
               display: "flex",
-              width: "410px",
+              width: "580px",
               flexDirection: "column",
-              gap: "18px",
+              gap: "16px",
               border: "2px solid #cbe7fb",
-              borderRadius: "30px",
+              borderRadius: "28px",
               background: "#f2faff",
-              padding: "30px 32px",
+              padding: "28px 32px",
             }}
           >
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-              <div
-                style={{
-                  display: "flex",
-                  color: "#5b7182",
-                  fontSize: "16px",
-                  fontWeight: 700,
-                  letterSpacing: "0.1em",
-                }}
-              >
-                NX
-              </div>
-              <div style={{ display: "flex", fontSize: "44px", fontWeight: 700 }}>5,000</div>
-            </div>
+            <ValueRow label="NX" value={preview.nxValue} />
             <div style={{ display: "flex", height: "2px", background: "#d9ecfa" }} />
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-              <div
-                style={{
-                  display: "flex",
-                  color: "#5b7182",
-                  fontSize: "16px",
-                  fontWeight: 700,
-                  letterSpacing: "0.1em",
-                }}
-              >
-                MESOS
-              </div>
-              <div style={{ display: "flex", fontSize: "44px", fontWeight: 700 }}>45,000</div>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-              <div
-                style={{
-                  display: "flex",
-                  color: "#5b7182",
-                  fontSize: "16px",
-                  fontWeight: 700,
-                  letterSpacing: "0.1em",
-                }}
-              >
-                USD
-              </div>
-              <div style={{ display: "flex", fontSize: "32px", fontWeight: 700, color: "#a5480b" }}>
-                US$ 5.00
-              </div>
-            </div>
+            <ValueRow label="MESOS" value={preview.mesosValue} />
+            <ValueRow label="USD" value={preview.usdValue} accent />
           </div>
         </div>
 
@@ -183,6 +150,55 @@ export default function Image() {
         </div>
       </div>
     </div>,
-    size,
+    {
+      ...IMAGE_SIZE,
+      headers: {
+        "Cache-Control": "public, max-age=3600, s-maxage=86400",
+      },
+    },
   );
+}
+
+function ValueRow({
+  label,
+  value,
+  accent = false,
+}: Readonly<{ label: string; value: string; accent?: boolean }>) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+      <div
+        style={{
+          display: "flex",
+          color: "#5b7182",
+          fontSize: "15px",
+          fontWeight: 700,
+          letterSpacing: "0.1em",
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          fontSize: `${getValueFontSize(value)}px`,
+          fontWeight: 700,
+          color: accent ? "#a5480b" : "#17334d",
+        }}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function getValueFontSize(value: string): number {
+  if (value.length > 14) {
+    return 30;
+  }
+
+  if (value.length > 10) {
+    return 36;
+  }
+
+  return 50;
 }

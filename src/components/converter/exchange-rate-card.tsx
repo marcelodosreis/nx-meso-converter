@@ -48,7 +48,7 @@ export function ExchangeRateCard({
   return (
     <section
       aria-labelledby="exchange-rate-title"
-      className={`flex flex-col ${paddingClass} ${isCompact ? "max-md:ml-auto max-md:w-[85%]" : ""} ${className ?? ""}`}
+      className={`flex flex-col ${paddingClass} ${className ?? ""}`}
     >
       <div className="flex items-start justify-between gap-2">
         <div className={`min-w-0 ${currencyEnabled ? "" : "opacity-55"}`}>
