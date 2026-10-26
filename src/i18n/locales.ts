@@ -25,6 +25,7 @@ export type Messages = Readonly<{
     copied: string;
     failed: string;
   }>;
+  loading: string;
   language: Readonly<{
     label: string;
     change: string;
@@ -139,6 +140,7 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         copied: "Link copiado!",
         failed: "Não foi possível copiar o link.",
       },
+      loading: "Carregando conversão...",
       language: {
         label: "Idioma",
         change: "Alterar idioma",
@@ -267,6 +269,7 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         copied: "Link copied!",
         failed: "Could not copy the link.",
       },
+      loading: "Loading conversion...",
       language: {
         label: "Language",
         change: "Change language",
@@ -394,6 +397,7 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         copied: "링크가 복사되었습니다!",
         failed: "링크를 복사하지 못했습니다.",
       },
+      loading: "변환을 불러오는 중...",
       language: {
         label: "언어",
         change: "언어 변경",

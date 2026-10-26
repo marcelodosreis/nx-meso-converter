@@ -6,7 +6,11 @@ import { useLocale } from "@/i18n/locale-provider";
 import { LOCALE_DEFINITIONS, LOCALES, type Locale } from "@/i18n/locales";
 import { SCENARIO_URL_FLUSH_EVENT, SCENARIO_URL_UPDATED_EVENT } from "@/lib/scenario-url";
 
-export function LanguageSwitcher() {
+type LanguageSwitcherProps = Readonly<{
+  onLocaleChangeStart?: () => void;
+}>;
+
+export function LanguageSwitcher({ onLocaleChangeStart }: LanguageSwitcherProps) {
   const { locale, messages, localeHrefs, rememberLocale } = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const [urlSuffix, setUrlSuffix] = useState("");
@@ -84,12 +88,23 @@ export function LanguageSwitcher() {
     }
 
     event.preventDefault();
+    onLocaleChangeStart?.();
     rememberLocale(nextLocale);
     setIsOpen(false);
     window.dispatchEvent(new Event(SCENARIO_URL_FLUSH_EVENT));
 
     const suffix = `${window.location.search}${window.location.hash}`;
-    window.location.assign(`${localeHrefs[nextLocale]}${suffix}`);
+    const target = `${localeHrefs[nextLocale]}${suffix}`;
+    const navigate = () => window.location.assign(target);
+
+    if (onLocaleChangeStart === undefined) {
+      navigate();
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(navigate);
+    });
   }
 
   return (

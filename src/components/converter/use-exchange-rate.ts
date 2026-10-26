@@ -22,6 +22,7 @@ export type ExchangeRateState = Readonly<{
   rateCanonical: string;
   rate: number | null;
   error: ExchangeRateError | null;
+  isHydrated: boolean;
   updateRateText: (value: string) => void;
   applyCanonicalRate: (value: string) => void;
   restoreDefault: () => void;
@@ -32,18 +33,19 @@ export function useExchangeRate(): ExchangeRateState {
   const [rateCanonical, setRateCanonical] = useState(() =>
     numberToCanonicalNumberInput(DEFAULT_USD_CURRENCY_RATE, 2),
   );
+  const [isHydrated, setIsHydrated] = useState(false);
   const hasEditedRate = useRef(false);
 
   useEffect(() => {
-    if (hasEditedRate.current) {
-      return;
+    if (!hasEditedRate.current) {
+      const storedRate = readStoredExchangeRate();
+
+      if (storedRate !== null) {
+        setRateCanonical(numberToCanonicalNumberInput(storedRate, 2));
+      }
     }
 
-    const storedRate = readStoredExchangeRate();
-
-    if (storedRate !== null) {
-      setRateCanonical(numberToCanonicalNumberInput(storedRate, 2));
-    }
+    setIsHydrated(true);
   }, []);
 
   function applyCanonicalRate(value: string) {
@@ -72,6 +74,7 @@ export function useExchangeRate(): ExchangeRateState {
     rateCanonical,
     rate: validation.rate,
     error: validation.error,
+    isHydrated,
     updateRateText,
     applyCanonicalRate,
     restoreDefault,

@@ -26,17 +26,19 @@ import {
 import { useConversionSettings } from "../settings/conversion-settings-provider";
 import { AmountInput } from "./amount-input";
 import { ConversionResults } from "./conversion-results";
+import { ConverterSkeleton } from "./converter-skeleton";
 import { ExchangeRateCard } from "./exchange-rate-card";
 import { useCopyFeedback } from "./use-copy-feedback";
 import { useExchangeRate } from "./use-exchange-rate";
 
 type ConverterProps = Readonly<{
   initialSourceUnit?: SourceUnit;
+  isLoading?: boolean;
 }>;
 
-export function Converter({ initialSourceUnit = "nx" }: ConverterProps) {
+export function Converter({ initialSourceUnit = "nx", isLoading = false }: ConverterProps) {
   const { messages, numberFormat } = useLocale();
-  const { rates, saveRates } = useConversionSettings();
+  const { rates, isHydrated: settingsHydrated, saveRates } = useConversionSettings();
   const intlLocale = numberFormat.intlLocale;
   const [amountCanonical, setAmountCanonical] = useState("");
   const [sourceUnit, setSourceUnit] = useState<SourceUnit>(initialSourceUnit);
@@ -48,6 +50,7 @@ export function Converter({ initialSourceUnit = "nx" }: ConverterProps) {
     rateCanonical,
     rate,
     error: exchangeRateError,
+    isHydrated: exchangeRateHydrated,
     updateRateText,
     applyCanonicalRate,
     restoreDefault,
@@ -199,17 +202,21 @@ export function Converter({ initialSourceUnit = "nx" }: ConverterProps) {
     void copy("all", text);
   }
 
+  if (isLoading || !isUrlReady || !settingsHydrated || !exchangeRateHydrated) {
+    return <ConverterSkeleton />;
+  }
+
   return (
     <>
-      <div className="calculator-surface">
+      <div className="calculator-surface flex flex-col">
         <div
-          className={`grid ${
+          className={`contents md:grid ${
             currencyEnabled
               ? "md:grid-cols-[minmax(0,2.1fr)_minmax(18rem,1fr)]"
               : "md:grid-cols-[minmax(0,1fr)_minmax(15rem,24%)]"
           }`}
         >
-          <section aria-labelledby="converter-input-title" className="min-w-0 p-4 sm:p-5">
+          <section aria-labelledby="converter-input-title" className="order-1 min-w-0 p-4 sm:p-5">
             <h2 id="converter-input-title" className="sr-only">
               {messages.amount.inputSectionTitle}
             </h2>
@@ -225,7 +232,7 @@ export function Converter({ initialSourceUnit = "nx" }: ConverterProps) {
             />
           </section>
 
-          <div className="min-w-0 border-t border-sky-100/80 md:border-l md:border-t-0">
+          <div className="order-3 min-w-0 border-t border-sky-100/80 md:border-l md:border-t-0">
             <ExchangeRateCard
               rateText={rateText}
               rate={rate}
@@ -239,7 +246,7 @@ export function Converter({ initialSourceUnit = "nx" }: ConverterProps) {
           </div>
         </div>
 
-        <div className="border-t border-sky-100/80">
+        <div className="order-2 border-t border-sky-100/80">
           <ConversionResults
             values={values}
             sourceUnit={sourceUnit}

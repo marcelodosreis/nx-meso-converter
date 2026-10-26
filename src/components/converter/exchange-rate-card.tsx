@@ -42,8 +42,13 @@ export function ExchangeRateCard({
     intlLocale,
   )}`;
   const describedBy = errorMessage === null ? RATE_HELP_ID : `${RATE_HELP_ID} ${RATE_ERROR_ID}`;
-  const paddingClass = isCompact ? "px-4 pb-2 pt-4 sm:px-5 sm:pb-2 sm:pt-5" : "p-4 sm:p-5";
-  const badgeClass = `inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-extrabold uppercase tracking-[0.08em] ${isCompact ? "text-[0.5rem]" : "text-[0.625rem] lg:text-[0.6875rem]"}`;
+  const paddingClass = isCompact
+    ? "p-4 sm:p-5 md:px-4 md:pb-2 md:pt-4 lg:px-5 lg:pb-2 lg:pt-5"
+    : "p-4 sm:p-5";
+  const badgeSizeClass = isCompact
+    ? "text-[0.625rem] md:text-[0.5625rem] lg:text-[0.625rem]"
+    : "text-[0.625rem] lg:text-[0.6875rem]";
+  const badgeClass = `inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-extrabold uppercase tracking-[0.08em] ${badgeSizeClass}`;
 
   return (
     <section
@@ -56,7 +61,9 @@ export function ExchangeRateCard({
             <h2
               id="exchange-rate-title"
               className={`font-display font-semibold tracking-tight text-maple-ink ${
-                isCompact ? "text-xs lg:text-[0.8125rem]" : "text-base sm:text-lg lg:text-2xl"
+                isCompact
+                  ? "text-base sm:text-lg md:text-sm lg:text-lg"
+                  : "text-base sm:text-lg lg:text-2xl"
               }`}
             >
               {messages.rate.title}
@@ -78,7 +85,7 @@ export function ExchangeRateCard({
           </div>
           <p
             className={`mt-0.5 font-semibold leading-snug text-maple-muted ${
-              isCompact ? "text-[0.5rem]" : "text-xs lg:text-sm"
+              isCompact ? "text-xs md:text-[0.6875rem] lg:text-xs" : "text-xs lg:text-sm"
             }`}
           >
             {currencyEnabled ? messages.rate.description : messages.rate.disabledDescription}
@@ -105,7 +112,7 @@ export function ExchangeRateCard({
         </button>
       </div>
 
-      <div className={`transition-opacity ${currencyEnabled ? "" : "opacity-55"}`}>
+      <div className={`transition-opacity ${currencyEnabled ? "" : "max-md:hidden opacity-55"}`}>
         <div className={isCompact ? "mt-1.5" : "mt-3"}>
           <label htmlFor={RATE_INPUT_ID} className="sr-only">
             {messages.rate.ariaLabel}
@@ -114,7 +121,7 @@ export function ExchangeRateCard({
           <div className={`flex items-center ${isCompact ? "gap-1" : "gap-2"}`}>
             <span
               className={`shrink-0 font-extrabold uppercase tracking-wide text-maple-muted ${
-                isCompact ? "text-[0.5rem]" : "text-[0.6875rem] sm:text-xs lg:text-sm"
+                isCompact ? "text-[0.625rem] lg:text-xs" : "text-[0.6875rem] sm:text-xs lg:text-sm"
               }`}
             >
               {messages.rate.equalsPrefix}
@@ -144,13 +151,15 @@ export function ExchangeRateCard({
                 aria-describedby={describedBy}
                 className={`min-w-0 flex-1 bg-transparent pl-3 text-right font-display font-semibold text-maple-ink tabular-nums focus:outline-none disabled:cursor-not-allowed ${
                   isCompact
-                    ? "py-1 text-[0.6875rem]"
+                    ? "py-1.5 text-sm lg:py-2 lg:text-lg"
                     : "py-2.5 text-lg sm:text-xl lg:py-3 lg:text-2xl"
                 }`}
               />
               <span
                 className={`shrink-0 pr-3 font-extrabold uppercase tracking-[0.08em] text-maple-muted ${
-                  isCompact ? "pl-1 text-[0.5rem]" : "pl-1.5 text-[0.6875rem] lg:text-xs"
+                  isCompact
+                    ? "pl-1 text-[0.625rem] lg:text-xs"
+                    : "pl-1.5 text-[0.6875rem] lg:text-xs"
                 }`}
               >
                 {messages.rate.suffix}
@@ -166,7 +175,7 @@ export function ExchangeRateCard({
             <p
               id={RATE_HELP_ID}
               className={`font-semibold leading-snug text-maple-muted ${
-                isCompact ? "text-[0.5625rem]" : "text-xs lg:text-sm"
+                isCompact ? "text-[0.6875rem] lg:text-xs" : "text-xs lg:text-sm"
               }`}
             >
               {defaultRateText}
@@ -180,7 +189,7 @@ export function ExchangeRateCard({
               title={messages.rate.reset}
               className={`inline-flex shrink-0 items-center justify-center gap-1 rounded-lg font-extrabold text-sky-800 transition-colors hover:bg-sky-50 hover:text-sky-950 disabled:cursor-not-allowed ${
                 isCompact
-                  ? "min-h-5 px-1 text-[0.5rem]"
+                  ? "min-h-7 px-1.5 text-[0.625rem] lg:text-xs"
                   : "min-h-8 px-2 text-[0.6875rem] lg:min-h-9 lg:text-xs"
               }`}
             >
@@ -193,7 +202,7 @@ export function ExchangeRateCard({
             <p
               id={RATE_ERROR_ID}
               className={`font-semibold leading-snug text-red-700 ${
-                isCompact ? "mt-0.5 text-[0.5rem]" : "mt-1 text-xs lg:text-sm"
+                isCompact ? "mt-0.5 text-[0.625rem] lg:text-xs" : "mt-1 text-xs lg:text-sm"
               }`}
             >
               {errorMessage}
@@ -205,7 +214,7 @@ export function ExchangeRateCard({
           <div className={`border-t border-sky-100/80 ${isCompact ? "mt-1 pt-1" : "mt-3 pt-2.5"}`}>
             <p
               className={`font-extrabold uppercase tracking-[0.12em] text-maple-muted ${
-                isCompact ? "text-[0.5rem]" : "text-[0.625rem] lg:text-[0.6875rem]"
+                isCompact ? "text-[0.625rem]" : "text-[0.625rem] lg:text-[0.6875rem]"
               }`}
             >
               {messages.rate.reference}
@@ -215,14 +224,14 @@ export function ExchangeRateCard({
                 <div key={amount} className="min-w-0">
                   <dt
                     className={`truncate font-extrabold text-maple-muted ${
-                      isCompact ? "text-[0.4375rem]" : "text-[0.625rem]"
+                      isCompact ? "text-[0.5625rem] lg:text-[0.625rem]" : "text-[0.625rem]"
                     }`}
                   >
                     {formatUnitValue("usd", amount, intlLocale)}
                   </dt>
                   <dd
                     className={`mt-0.5 font-display font-semibold tabular-nums text-maple-ink ${
-                      isCompact ? "text-[0.625rem]" : "text-sm lg:text-base"
+                      isCompact ? "text-xs lg:text-sm" : "text-sm lg:text-base"
                     }`}
                   >
                     {formatUnitValue("currency", amount * rate, intlLocale)}

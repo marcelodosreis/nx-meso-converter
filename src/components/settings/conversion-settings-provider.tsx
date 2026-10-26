@@ -11,6 +11,7 @@ import {
 
 type ConversionSettingsContextValue = Readonly<{
   rates: ConversionRates;
+  isHydrated: boolean;
   saveRates: (rates: ConversionRates) => void;
   resetRates: () => void;
 }>;
@@ -19,18 +20,19 @@ const ConversionSettingsContext = createContext<ConversionSettingsContextValue |
 
 export function ConversionSettingsProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [rates, setRates] = useState<ConversionRates>(DEFAULT_CONVERSION_RATES);
+  const [isHydrated, setIsHydrated] = useState(false);
   const hasEditedSettings = useRef(false);
 
   useEffect(() => {
-    if (hasEditedSettings.current) {
-      return;
+    if (!hasEditedSettings.current) {
+      const storedRates = readStoredConversionRates();
+
+      if (storedRates !== null) {
+        setRates(storedRates);
+      }
     }
 
-    const storedRates = readStoredConversionRates();
-
-    if (storedRates !== null) {
-      setRates(storedRates);
-    }
+    setIsHydrated(true);
   }, []);
 
   function saveRates(nextRates: ConversionRates) {
@@ -50,7 +52,7 @@ export function ConversionSettingsProvider({ children }: Readonly<{ children: Re
   }
 
   return (
-    <ConversionSettingsContext.Provider value={{ rates, saveRates, resetRates }}>
+    <ConversionSettingsContext.Provider value={{ rates, isHydrated, saveRates, resetRates }}>
       {children}
     </ConversionSettingsContext.Provider>
   );

@@ -1,17 +1,25 @@
 "use client";
 
 import { Coins, Settings2, Sparkles } from "lucide-react";
+import Link from "next/link";
 import { APP_NAME } from "@/config/app.constants";
 import { useLocale } from "@/i18n/locale-provider";
 import { LanguageSwitcher } from "./language-switcher";
 import { ShareButton } from "./share-button";
 
 type AppHeaderProps = Readonly<{
+  homeHref: string;
   onOpenSettings?: () => void;
+  onLocaleChangeStart?: () => void;
   settingsCustomized?: boolean;
 }>;
 
-export function AppHeader({ onOpenSettings, settingsCustomized = false }: AppHeaderProps) {
+export function AppHeader({
+  homeHref,
+  onOpenSettings,
+  onLocaleChangeStart,
+  settingsCustomized = false,
+}: AppHeaderProps) {
   const { messages } = useLocale();
   const settingsLabel = settingsCustomized
     ? `${messages.settings.open} (${messages.settings.custom})`
@@ -19,7 +27,10 @@ export function AppHeader({ onOpenSettings, settingsCustomized = false }: AppHea
 
   return (
     <header className="mb-3 flex items-center justify-between gap-3 sm:mb-4 sm:gap-4 lg:mb-5">
-      <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+      <Link
+        href={homeHref}
+        className="flex min-w-0 cursor-pointer items-center gap-2.5 rounded-2xl sm:gap-3"
+      >
         <span className="relative flex size-10 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-amber-300 via-orange-400 to-orange-500 text-white shadow-[0_14px_30px_-18px_rgba(180,72,8,0.9)] ring-2 ring-white/80 sm:size-12 sm:rounded-[1.25rem] lg:size-14">
           <Coins aria-hidden="true" strokeWidth={2.3} className="size-5 sm:size-6 lg:size-7" />
           <Sparkles
@@ -43,7 +54,7 @@ export function AppHeader({ onOpenSettings, settingsCustomized = false }: AppHea
             {messages.header.tagline}
           </p>
         </div>
-      </div>
+      </Link>
 
       <div className="flex shrink-0 items-center gap-1.5">
         {onOpenSettings === undefined ? null : <ShareButton />}
@@ -64,7 +75,7 @@ export function AppHeader({ onOpenSettings, settingsCustomized = false }: AppHea
             <Settings2 aria-hidden="true" strokeWidth={2.4} className="size-4 lg:size-[18px]" />
           </button>
         )}
-        <LanguageSwitcher />
+        <LanguageSwitcher onLocaleChangeStart={onLocaleChangeStart} />
       </div>
     </header>
   );
