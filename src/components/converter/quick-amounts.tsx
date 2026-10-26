@@ -3,6 +3,7 @@
 import { QUICK_AMOUNT_PRESETS } from "@/config/quick-amounts";
 import type { SourceUnit } from "@/domain/conversion/conversion.types";
 import { useLocale } from "@/i18n/locale-provider";
+import { formatCompactUnitValue } from "@/lib/formatters";
 import {
   formatCanonicalNumberInput,
   numberToCanonicalNumberInput,
@@ -13,15 +14,9 @@ type QuickAmountsProps = Readonly<{
   onSelect: (canonicalValue: string) => void;
 }>;
 
-const COMPACT_FORMAT_THRESHOLD = 1_000;
-
 export function QuickAmounts({ unit, onSelect }: QuickAmountsProps) {
   const { messages, numberFormat } = useLocale();
   const unitLabel = messages.units.labels[unit].shortLabel;
-  const compactFormatter = new Intl.NumberFormat(numberFormat.intlLocale, {
-    notation: "compact",
-    maximumFractionDigits: 1,
-  });
 
   return (
     <fieldset className="flex shrink-0 flex-wrap items-center gap-1">
@@ -35,8 +30,7 @@ export function QuickAmounts({ unit, onSelect }: QuickAmountsProps) {
       {QUICK_AMOUNT_PRESETS[unit].map((preset) => {
         const canonicalValue = numberToCanonicalNumberInput(preset);
         const fullValue = formatCanonicalNumberInput(canonicalValue, numberFormat);
-        const shortValue =
-          preset >= COMPACT_FORMAT_THRESHOLD ? compactFormatter.format(preset) : fullValue;
+        const shortValue = formatCompactUnitValue(unit, preset) ?? fullValue;
 
         return (
           <button

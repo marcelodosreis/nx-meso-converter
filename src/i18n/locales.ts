@@ -48,6 +48,7 @@ export type Messages = Readonly<{
     unavailable: string;
     copyAll: string;
     copyAllShort: string;
+    affectedByCustomRates: string;
   }>;
   rate: Readonly<{
     title: string;
@@ -79,6 +80,7 @@ export type Messages = Readonly<{
     open: string;
     title: string;
     description: string;
+    custom: string;
     close: string;
     nxPerUsd: string;
     nxPerUsdHint: string;
@@ -180,6 +182,7 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         unavailable: "Conversão indisponível.",
         copyAll: "Copiar todas as conversões",
         copyAllShort: "Copiar",
+        affectedByCustomRates: "Valor afetado pelas configurações personalizadas",
       },
       rate: {
         title: "Cotação da moeda",
@@ -211,6 +214,7 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         open: "Configurações",
         title: "Configurações de conversão",
         description: "Ajuste como NX, mesos e dólar se relacionam.",
+        custom: "Personalizado",
         close: "Fechar configurações",
         nxPerUsd: "NX por US$",
         nxPerUsdHint: "Quantidade de NX equivalente a 1 dólar.",
@@ -301,6 +305,7 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         unavailable: "Conversion unavailable.",
         copyAll: "Copy all conversions",
         copyAllShort: "Copy",
+        affectedByCustomRates: "Value affected by custom settings",
       },
       rate: {
         title: "Currency rate",
@@ -332,6 +337,7 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         open: "Settings",
         title: "Conversion settings",
         description: "Adjust how NX, mesos, and dollars relate.",
+        custom: "Custom",
         close: "Close settings",
         nxPerUsd: "NX per US$",
         nxPerUsdHint: "Amount of NX equal to US$ 1.",
@@ -421,6 +427,7 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         unavailable: "변환할 수 없습니다.",
         copyAll: "모든 변환 결과 복사",
         copyAllShort: "복사",
+        affectedByCustomRates: "사용자 지정 설정의 영향을 받는 값",
       },
       rate: {
         title: "화폐 환율",
@@ -452,6 +459,7 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         open: "설정",
         title: "변환 설정",
         description: "NX, 메소, 달러의 관계를 조정하세요.",
+        custom: "사용자 지정",
         close: "설정 닫기",
         nxPerUsd: "US$당 NX",
         nxPerUsdHint: "1달러에 해당하는 NX 수입니다.",

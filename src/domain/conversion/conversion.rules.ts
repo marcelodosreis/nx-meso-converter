@@ -1,4 +1,7 @@
+import { DEFAULT_CONVERSION_RATES } from "./conversion.constants";
 import type { ConversionRates, ConversionUnit } from "./conversion.types";
+
+const RATE_COMPARISON_EPSILON = 1e-9;
 
 export function isValidAmount(amount: number): boolean {
   return Number.isFinite(amount) && amount >= 0;
@@ -17,6 +20,18 @@ export function isValidConversionRates(rates: ConversionRates): boolean {
     Number.isFinite(rates.mesosPerSlot) &&
     rates.mesosPerSlot > 0
   );
+}
+
+export function areConversionRatesEqual(left: ConversionRates, right: ConversionRates): boolean {
+  return (
+    areNumbersClose(left.nxPerUsd, right.nxPerUsd) &&
+    areNumbersClose(left.nxPerSlot, right.nxPerSlot) &&
+    areNumbersClose(left.mesosPerSlot, right.mesosPerSlot)
+  );
+}
+
+export function isDefaultConversionRates(rates: ConversionRates): boolean {
+  return areConversionRatesEqual(rates, DEFAULT_CONVERSION_RATES);
 }
 
 export function getMesosPerNx(rates: ConversionRates): number {
@@ -61,6 +76,12 @@ export function fromNx(
     default:
       return assertNever(unit);
   }
+}
+
+export function areNumbersClose(left: number, right: number): boolean {
+  const scale = Math.max(1, Math.abs(left), Math.abs(right));
+
+  return Math.abs(left - right) <= RATE_COMPARISON_EPSILON * scale;
 }
 
 function assertNever(value: never): never {

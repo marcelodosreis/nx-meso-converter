@@ -13,6 +13,7 @@ import type { CopyTarget } from "./use-copy-feedback";
 type ConversionResultsProps = Readonly<{
   values: ConversionValues | null;
   sourceUnit: SourceUnit;
+  affectedUnits: ReadonlySet<ConversionUnit> | null;
   currencyEnabled: boolean;
   copiedTarget: CopyTarget | null;
   placeholderMessage: string;
@@ -25,6 +26,7 @@ type ConversionResultsProps = Readonly<{
 export function ConversionResults({
   values,
   sourceUnit,
+  affectedUnits,
   currencyEnabled,
   copiedTarget,
   placeholderMessage,
@@ -104,6 +106,7 @@ export function ConversionResults({
             key={unit}
             unit={unit}
             value={values === null ? null : values[unit]}
+            isAffected={affectedUnits?.has(unit) ?? false}
             isCopied={copiedTarget === unit}
             onCopy={onCopy}
           />

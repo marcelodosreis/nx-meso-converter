@@ -11,6 +11,9 @@ type UnitSelectorProps = Readonly<{
 
 export function UnitSelector({ value, currencyEnabled, onChange }: UnitSelectorProps) {
   const { messages } = useLocale();
+  const visibleUnits = currencyEnabled
+    ? SOURCE_UNITS
+    : SOURCE_UNITS.filter((unit) => unit !== "currency");
 
   return (
     <fieldset className="min-w-0">
@@ -18,26 +21,26 @@ export function UnitSelector({ value, currencyEnabled, onChange }: UnitSelectorP
         {messages.units.legend}
       </legend>
 
-      <div className="grid grid-cols-4 gap-1 rounded-2xl border border-sky-100/80 bg-sky-50/60 p-1">
-        {SOURCE_UNITS.map((unit) => {
+      <div
+        className={`grid gap-1 rounded-2xl border border-sky-100/80 bg-sky-50/60 p-1 ${
+          currencyEnabled ? "grid-cols-4" : "grid-cols-3"
+        }`}
+      >
+        {visibleUnits.map((unit) => {
           const Icon = UNIT_ICONS[unit];
           const unitMessages = messages.units.labels[unit];
           const isSelected = unit === value;
-          const isDisabled = unit === "currency" && !currencyEnabled;
 
           return (
             <button
               key={unit}
               type="button"
-              disabled={isDisabled}
               aria-pressed={isSelected}
               onClick={() => onChange(unit)}
               className={`flex min-h-11 min-w-0 items-center justify-center gap-1 rounded-xl px-1 text-xs font-extrabold transition-[background-color,box-shadow,color] sm:min-h-12 lg:min-h-14 lg:gap-1.5 lg:text-sm ${
-                isDisabled
-                  ? "cursor-not-allowed text-maple-muted opacity-35"
-                  : isSelected
-                    ? "bg-white text-maple-ink shadow-sm ring-1 ring-amber-200/80"
-                    : "text-maple-muted hover:bg-white/65 hover:text-maple-ink"
+                isSelected
+                  ? "bg-white text-maple-ink shadow-sm ring-1 ring-amber-200/80"
+                  : "text-maple-muted hover:bg-white/65 hover:text-maple-ink"
               }`}
             >
               <Icon

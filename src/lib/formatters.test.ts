@@ -5,7 +5,12 @@ import {
 } from "@/domain/conversion/conversion.constants";
 import { getMesosPerNx } from "@/domain/conversion/conversion.rules";
 import { LOCALE_DEFINITIONS } from "@/i18n/locales";
-import { formatExchangeRate, formatUnitValue, formatUnitValueWithLabel } from "./formatters";
+import {
+  formatCompactUnitValue,
+  formatExchangeRate,
+  formatUnitValue,
+  formatUnitValueWithLabel,
+} from "./formatters";
 
 const pt = LOCALE_DEFINITIONS.pt.numberFormat.intlLocale;
 const en = LOCALE_DEFINITIONS.en.numberFormat.intlLocale;
@@ -28,16 +33,18 @@ describe("formatUnitValue", () => {
     expect(formatUnitValue("currency", currency, ko)).toBe("54.00");
   });
 
-  it("limits fractional digits to two for regular values", () => {
-    expect(formatUnitValue("nx", 1022.2222, pt)).toBe("1.022,22");
-    expect(formatUnitValue("nx", 1022.2222, en)).toBe("1,022.22");
+  it("formats NX and mesos as whole numbers", () => {
+    expect(formatUnitValue("nx", 1022.2222, pt)).toBe("1.022");
+    expect(formatUnitValue("nx", 1022.2222, en)).toBe("1,022");
+    expect(formatUnitValue("nx", 1022.5, en)).toBe("1,023");
     expect(formatUnitValue("mesos", 1.999_999, pt)).toBe("2");
+    expect(formatUnitValue("nx", 0.0001, en)).toBe("0");
+    expect(formatUnitValue("mesos", 0.6, pt)).toBe("1");
   });
 
-  it("keeps useful precision for small non-zero values", () => {
+  it("keeps useful precision for small non-zero currency values", () => {
     expect(formatUnitValue("usd", 0.001, en)).toBe("US$ 0.001");
     expect(formatUnitValue("currency", 0.001, pt)).toBe("0,001");
-    expect(formatUnitValue("nx", 0.0001, en)).toBe("0.0001");
   });
 
   it("formats zero and small values", () => {
@@ -57,6 +64,35 @@ describe("formatUnitValueWithLabel", () => {
     expect(formatUnitValueWithLabel("mesos", 90_000, en, "Mesos")).toBe("90,000 Mesos");
     expect(formatUnitValueWithLabel("usd", 10, pt, "Dólar")).toBe("US$ 10,00");
     expect(formatUnitValueWithLabel("currency", 54, pt, "Moeda")).toBe("54,00 Moeda");
+  });
+});
+
+describe("formatCompactUnitValue", () => {
+  it("uses community suffixes for NX and mesos", () => {
+    expect(formatCompactUnitValue("nx", 1_000)).toBe("1k");
+    expect(formatCompactUnitValue("nx", 1_500)).toBe("1.5k");
+    expect(formatCompactUnitValue("nx", 10_000)).toBe("10k");
+    expect(formatCompactUnitValue("mesos", 45_000)).toBe("45k");
+    expect(formatCompactUnitValue("mesos", 1_000_000)).toBe("1m");
+    expect(formatCompactUnitValue("mesos", 1_250_000)).toBe("1.3m");
+    expect(formatCompactUnitValue("mesos", 2_000_000_000)).toBe("2b");
+    expect(formatCompactUnitValue("mesos", 1_000_000_000_000)).toBe("1t");
+  });
+
+  it("promotes the scale after rounding", () => {
+    expect(formatCompactUnitValue("mesos", 999_950)).toBe("1m");
+  });
+
+  it("does not compact small values, currencies, or invalid numbers", () => {
+    expect(formatCompactUnitValue("nx", 999)).toBeNull();
+    expect(formatCompactUnitValue("usd", 1_000)).toBeNull();
+    expect(formatCompactUnitValue("currency", 1_000)).toBeNull();
+    expect(formatCompactUnitValue("nx", Number.NaN)).toBeNull();
+    expect(formatCompactUnitValue("mesos", Number.POSITIVE_INFINITY)).toBeNull();
+  });
+
+  it("preserves the sign for negative values", () => {
+    expect(formatCompactUnitValue("nx", -5_000)).toBe("-5k");
   });
 });
 

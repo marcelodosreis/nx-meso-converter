@@ -5,8 +5,10 @@ import {
   DEFAULT_USD_CURRENCY_RATE,
 } from "./conversion.constants";
 import {
+  areConversionRatesEqual,
   fromNx,
   getMesosPerNx,
+  isDefaultConversionRates,
   isValidAmount,
   isValidConversionRates,
   isValidUsdCurrencyRate,
@@ -95,6 +97,23 @@ describe("conversion rules", () => {
     expect(isValidUsdCurrencyRate(-1)).toBe(false);
     expect(isValidUsdCurrencyRate(Number.NaN)).toBe(false);
     expect(isValidUsdCurrencyRate(Number.POSITIVE_INFINITY)).toBe(false);
+  });
+
+  it("detects custom conversion rates", () => {
+    expect(isDefaultConversionRates(DEFAULT_CONVERSION_RATES)).toBe(true);
+    expect(
+      isDefaultConversionRates({
+        ...DEFAULT_CONVERSION_RATES,
+        nxPerUsd: DEFAULT_CONVERSION_RATES.nxPerUsd * 2,
+      }),
+    ).toBe(false);
+    expect(isDefaultConversionRates({ ...DEFAULT_CONVERSION_RATES, nxPerSlot: 5_001 })).toBe(false);
+    expect(
+      areConversionRatesEqual(DEFAULT_CONVERSION_RATES, {
+        ...DEFAULT_CONVERSION_RATES,
+        nxPerSlot: DEFAULT_CONVERSION_RATES.nxPerSlot + 0.000_000_000_1,
+      }),
+    ).toBe(true);
   });
 
   it("validates conversion rates", () => {

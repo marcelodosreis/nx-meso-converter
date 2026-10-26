@@ -7,10 +7,14 @@ import { LanguageSwitcher } from "./language-switcher";
 
 type AppHeaderProps = Readonly<{
   onOpenSettings?: () => void;
+  settingsCustomized?: boolean;
 }>;
 
-export function AppHeader({ onOpenSettings }: AppHeaderProps) {
+export function AppHeader({ onOpenSettings, settingsCustomized = false }: AppHeaderProps) {
   const { messages } = useLocale();
+  const settingsLabel = settingsCustomized
+    ? `${messages.settings.open} (${messages.settings.custom})`
+    : messages.settings.open;
 
   return (
     <header className="mb-3 flex items-center justify-between gap-3 sm:mb-4 sm:gap-4 lg:mb-5">
@@ -45,10 +49,16 @@ export function AppHeader({ onOpenSettings }: AppHeaderProps) {
           <button
             type="button"
             onClick={onOpenSettings}
-            aria-label={messages.settings.open}
-            title={messages.settings.open}
-            className="flex size-9 items-center justify-center rounded-xl border border-white/90 bg-white/75 text-sky-900 shadow-sm backdrop-blur-sm transition-colors hover:border-sky-200 hover:bg-white lg:size-11"
+            aria-label={settingsLabel}
+            title={settingsLabel}
+            className="relative flex size-9 items-center justify-center rounded-xl border border-white/90 bg-white/75 text-sky-900 shadow-sm backdrop-blur-sm transition-colors hover:border-sky-200 hover:bg-white lg:size-11"
           >
+            {settingsCustomized ? (
+              <span
+                aria-hidden="true"
+                className="absolute -right-0.5 -top-0.5 size-2 rounded-full bg-maple-orange ring-2 ring-white"
+              />
+            ) : null}
             <Settings2 aria-hidden="true" strokeWidth={2.4} className="size-4 lg:size-[18px]" />
           </button>
         )}

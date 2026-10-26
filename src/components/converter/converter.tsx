@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { calculateConversion } from "@/application/conversion/calculate-conversion.use-case";
+import { findAffectedUnits } from "@/application/conversion/find-affected-units";
 import {
   CONVERSION_UNITS,
   DEFAULT_USD_CURRENCY_RATE,
@@ -48,6 +49,18 @@ export function Converter({ initialSourceUnit = "nx" }: ConverterProps) {
   const effectiveRate = currencyEnabled ? rate : (rate ?? DEFAULT_USD_CURRENCY_RATE);
   const activeRateError = currencyEnabled ? exchangeRateError : null;
   const values = getConversionValues(amountValue, sourceUnit, effectiveRate, rates);
+  const affectedUnits =
+    values === null || amountValue === null || effectiveRate === null
+      ? null
+      : findAffectedUnits(
+          {
+            amount: amountValue,
+            sourceUnit,
+            usdCurrencyRate: effectiveRate,
+            rates,
+          },
+          values,
+        );
   const placeholderMessage = getResultsPlaceholder(
     amountCanonical,
     amountError,
@@ -100,7 +113,7 @@ export function Converter({ initialSourceUnit = "nx" }: ConverterProps) {
         <div
           className={`grid ${
             currencyEnabled
-              ? "md:grid-cols-[minmax(0,1.55fr)_minmax(18rem,1fr)]"
+              ? "md:grid-cols-[minmax(0,2.1fr)_minmax(18rem,1fr)]"
               : "md:grid-cols-[minmax(0,1fr)_minmax(15rem,24%)]"
           }`}
         >
@@ -138,6 +151,7 @@ export function Converter({ initialSourceUnit = "nx" }: ConverterProps) {
           <ConversionResults
             values={values}
             sourceUnit={sourceUnit}
+            affectedUnits={affectedUnits}
             copiedTarget={copiedTarget}
             currencyEnabled={currencyEnabled}
             placeholderMessage={placeholderMessage}

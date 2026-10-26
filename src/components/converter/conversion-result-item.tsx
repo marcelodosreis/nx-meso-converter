@@ -1,17 +1,24 @@
 import { Check, Copy } from "lucide-react";
 import type { ConversionUnit } from "@/domain/conversion/conversion.types";
 import { useLocale } from "@/i18n/locale-provider";
-import { formatUnitValue } from "@/lib/formatters";
+import { formatCompactUnitValue, formatUnitValue } from "@/lib/formatters";
 import { UNIT_ICONS } from "./unit-icons";
 
 type ConversionResultItemProps = Readonly<{
   unit: ConversionUnit;
   value: number | null;
+  isAffected: boolean;
   isCopied: boolean;
   onCopy: (unit: ConversionUnit) => void;
 }>;
 
-export function ConversionResultItem({ unit, value, isCopied, onCopy }: ConversionResultItemProps) {
+export function ConversionResultItem({
+  unit,
+  value,
+  isAffected,
+  isCopied,
+  onCopy,
+}: ConversionResultItemProps) {
   const { messages, numberFormat } = useLocale();
   const intlLocale = numberFormat.intlLocale;
   const Icon = UNIT_ICONS[unit];
@@ -19,6 +26,7 @@ export function ConversionResultItem({ unit, value, isCopied, onCopy }: Conversi
   const canCopy = value !== null;
   const copyLabel = isCopied ? messages.copy.success : unitMessages.copyAriaLabel;
   const formattedValue = value === null ? "—" : formatUnitValue(unit, value, intlLocale);
+  const compactValue = value === null ? null : formatCompactUnitValue(unit, value);
   const isLongValue = formattedValue.length > 13;
 
   return (
@@ -32,9 +40,20 @@ export function ConversionResultItem({ unit, value, isCopied, onCopy }: Conversi
       </span>
 
       <div className="min-w-0">
-        <span className="block truncate text-sm font-extrabold text-maple-ink lg:text-base">
-          {unitMessages.label}
-        </span>
+        <div className="flex min-w-0 items-center gap-1.5">
+          <span className="truncate text-sm font-extrabold text-maple-ink lg:text-base">
+            {unitMessages.label}
+          </span>
+          {isAffected ? (
+            <span
+              className="inline-flex shrink-0 items-center rounded-full bg-amber-100/80 px-1.5 py-0.5 text-[0.5rem] font-extrabold uppercase tracking-[0.06em] text-amber-900 lg:text-[0.5625rem]"
+              title={messages.results.affectedByCustomRates}
+            >
+              {messages.settings.custom}
+              <span className="sr-only"> — {messages.results.affectedByCustomRates}</span>
+            </span>
+          ) : null}
+        </div>
         <p
           className={`mt-0.5 min-w-0 text-left font-display font-semibold tracking-tight text-maple-ink tabular-nums [overflow-wrap:anywhere] ${
             isLongValue
@@ -43,6 +62,11 @@ export function ConversionResultItem({ unit, value, isCopied, onCopy }: Conversi
           }`}
         >
           {formattedValue}
+          {compactValue !== null ? (
+            <span className="ml-2 whitespace-nowrap align-baseline font-sans text-sm font-bold text-maple-muted lg:text-base">
+              ≈ {compactValue}
+            </span>
+          ) : null}
         </p>
       </div>
 

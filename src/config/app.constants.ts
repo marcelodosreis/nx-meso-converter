@@ -10,8 +10,8 @@ export const UNIT_FRACTION_DIGITS: Record<
   ConversionUnit,
   Readonly<{ minimum: number; maximum: number }>
 > = {
-  nx: { minimum: 0, maximum: 2 },
-  mesos: { minimum: 0, maximum: 2 },
+  nx: { minimum: 0, maximum: 0 },
+  mesos: { minimum: 0, maximum: 0 },
   usd: { minimum: 2, maximum: 2 },
   currency: { minimum: 2, maximum: 2 },
 };

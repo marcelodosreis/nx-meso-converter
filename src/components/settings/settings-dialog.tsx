@@ -11,7 +11,10 @@ import {
   updateConversionSettingsDraft,
 } from "@/application/settings/conversion-settings-draft";
 import { DEFAULT_CONVERSION_RATES } from "@/domain/conversion/conversion.constants";
-import { isValidConversionRates } from "@/domain/conversion/conversion.rules";
+import {
+  isDefaultConversionRates,
+  isValidConversionRates,
+} from "@/domain/conversion/conversion.rules";
 import { useLocale } from "@/i18n/locale-provider";
 import {
   formatCanonicalNumberInput,
@@ -87,6 +90,7 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
     };
   }, [open]);
 
+  const hasCustomRates = !isDefaultConversionRates(rates);
   const mesosPerNx = getDraftMesosPerNx(drafts);
   const derivedValue =
     mesosPerNx === null
@@ -146,12 +150,19 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
       <form onSubmit={handleSubmit} className="p-4 sm:p-6">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h2
-              id="settings-title"
-              className="font-display text-xl font-semibold tracking-tight text-maple-ink"
-            >
-              {messages.settings.title}
-            </h2>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+              <h2
+                id="settings-title"
+                className="font-display text-xl font-semibold tracking-tight text-maple-ink"
+              >
+                {messages.settings.title}
+              </h2>
+              {hasCustomRates ? (
+                <span className="inline-flex items-center rounded-full bg-amber-100/80 px-2 py-0.5 text-[0.625rem] font-extrabold uppercase tracking-[0.08em] text-amber-900">
+                  {messages.settings.custom}
+                </span>
+              ) : null}
+            </div>
             <p
               id="settings-description"
               className="mt-1 text-xs font-semibold leading-relaxed text-maple-muted sm:text-sm"

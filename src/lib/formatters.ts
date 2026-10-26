@@ -7,6 +7,9 @@ import type { ConversionUnit } from "@/domain/conversion/conversion.types";
 
 const formatterCache = new Map<string, Intl.NumberFormat>();
 
+const COMPACT_SCALES = ["k", "m", "b", "t"] as const;
+const COMPACT_MINIMUM_VALUE = 1_000;
+
 function getNumberFormatter(
   intlLocale: string,
   minimum: number,
@@ -45,6 +48,37 @@ export function formatUnitValue(unit: ConversionUnit, value: number, intlLocale:
   return symbol === null ? formattedValue : `${symbol} ${formattedValue}`;
 }
 
+export function formatCompactUnitValue(unit: ConversionUnit, value: number): string | null {
+  if (unit === "usd" || unit === "currency") {
+    return null;
+  }
+
+  const absoluteValue = Math.abs(value);
+
+  if (!Number.isFinite(value) || absoluteValue < COMPACT_MINIMUM_VALUE) {
+    return null;
+  }
+
+  const exponent = Math.floor(Math.log10(absoluteValue) + Number.EPSILON);
+  let scaleIndex = Math.max(0, Math.floor(exponent / 3) - 1);
+  scaleIndex = Math.min(scaleIndex, COMPACT_SCALES.length - 1);
+
+  let roundedValue =
+    Math.round((absoluteValue / 1_000 ** (scaleIndex + 1) + Number.EPSILON) * 10) / 10;
+
+  if (roundedValue >= 1_000 && scaleIndex < COMPACT_SCALES.length - 1) {
+    roundedValue /= 1_000;
+    scaleIndex += 1;
+  }
+
+  const formattedValue = Number.isInteger(roundedValue)
+    ? String(roundedValue)
+    : roundedValue.toFixed(1);
+  const sign = value < 0 ? "-" : "";
+
+  return `${sign}${formattedValue}${COMPACT_SCALES[scaleIndex]}`;
+}
+
 export function formatUnitValueWithLabel(
   unit: ConversionUnit,
   value: number,
@@ -62,13 +96,12 @@ function getUnitFractionDigits(
 ): Readonly<{ minimum: number; maximum: number }> {
   const defaultDigits = UNIT_FRACTION_DIGITS[unit];
   const absoluteValue = Math.abs(value);
+  const hasFractionalCurrency = unit === "usd" || unit === "currency";
 
-  if (Number.isFinite(value) && absoluteValue > 0 && absoluteValue < 1) {
-    const smallValueMaximum = unit === "usd" || unit === "currency" ? 8 : 6;
-
+  if (hasFractionalCurrency && Number.isFinite(value) && absoluteValue > 0 && absoluteValue < 1) {
     return {
       minimum: defaultDigits.minimum,
-      maximum: Math.max(defaultDigits.maximum, smallValueMaximum),
+      maximum: Math.max(defaultDigits.maximum, 8),
     };
   }
 
