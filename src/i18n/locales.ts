@@ -20,6 +20,11 @@ export type Messages = Readonly<{
   header: Readonly<{
     tagline: string;
   }>;
+  share: Readonly<{
+    label: string;
+    copied: string;
+    failed: string;
+  }>;
   language: Readonly<{
     label: string;
     change: string;
@@ -128,6 +133,11 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
     messages: {
       header: {
         tagline: "NX, mesos, dólar e moeda no mesmo lugar.",
+      },
+      share: {
+        label: "Copiar link do cenário",
+        copied: "Link copiado!",
+        failed: "Não foi possível copiar o link.",
       },
       language: {
         label: "Idioma",
@@ -252,6 +262,11 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
       header: {
         tagline: "NX, mesos, dollars, and currency in one place.",
       },
+      share: {
+        label: "Copy scenario link",
+        copied: "Link copied!",
+        failed: "Could not copy the link.",
+      },
       language: {
         label: "Language",
         change: "Change language",
@@ -373,6 +388,11 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
     messages: {
       header: {
         tagline: "NX, 메소, 달러, 화폐를 한곳에서.",
+      },
+      share: {
+        label: "시나리오 링크 복사",
+        copied: "링크가 복사되었습니다!",
+        failed: "링크를 복사하지 못했습니다.",
       },
       language: {
         label: "언어",

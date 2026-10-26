@@ -4,6 +4,7 @@ import { Coins, Settings2, Sparkles } from "lucide-react";
 import { APP_NAME } from "@/config/app.constants";
 import { useLocale } from "@/i18n/locale-provider";
 import { LanguageSwitcher } from "./language-switcher";
+import { ShareButton } from "./share-button";
 
 type AppHeaderProps = Readonly<{
   onOpenSettings?: () => void;
@@ -45,6 +46,7 @@ export function AppHeader({ onOpenSettings, settingsCustomized = false }: AppHea
       </div>
 
       <div className="flex shrink-0 items-center gap-1.5">
+        {onOpenSettings === undefined ? null : <ShareButton />}
         {onOpenSettings === undefined ? null : (
           <button
             type="button"

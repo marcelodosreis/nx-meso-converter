@@ -19,9 +19,11 @@ export type ExchangeRateError = "empty" | "non-positive" | "invalid";
 
 export type ExchangeRateState = Readonly<{
   rateText: string;
+  rateCanonical: string;
   rate: number | null;
   error: ExchangeRateError | null;
   updateRateText: (value: string) => void;
+  applyCanonicalRate: (value: string) => void;
   restoreDefault: () => void;
 }>;
 
@@ -44,31 +46,34 @@ export function useExchangeRate(): ExchangeRateState {
     }
   }, []);
 
-  function updateRateText(value: string) {
+  function applyCanonicalRate(value: string) {
     hasEditedRate.current = true;
-    const nextCanonicalValue = normalizeLocalizedNumberInput(value, numberFormat);
-    setRateCanonical(nextCanonicalValue);
+    setRateCanonical(value);
 
-    const parsedValue = parseCanonicalNumber(nextCanonicalValue);
+    const parsedValue = parseCanonicalNumber(value);
 
     if (parsedValue !== null && isValidUsdCurrencyRate(parsedValue)) {
       writeStoredExchangeRate(parsedValue);
     }
   }
 
+  function updateRateText(value: string) {
+    applyCanonicalRate(normalizeLocalizedNumberInput(value, numberFormat));
+  }
+
   function restoreDefault() {
-    hasEditedRate.current = true;
-    setRateCanonical(numberToCanonicalNumberInput(DEFAULT_USD_CURRENCY_RATE, 2));
-    writeStoredExchangeRate(DEFAULT_USD_CURRENCY_RATE);
+    applyCanonicalRate(numberToCanonicalNumberInput(DEFAULT_USD_CURRENCY_RATE, 2));
   }
 
   const validation = validateExchangeRate(rateCanonical);
 
   return {
     rateText: formatCanonicalNumberInput(rateCanonical, numberFormat),
+    rateCanonical,
     rate: validation.rate,
     error: validation.error,
     updateRateText,
+    applyCanonicalRate,
     restoreDefault,
   };
 }

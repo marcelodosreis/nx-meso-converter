@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { calculateConversion } from "@/application/conversion/calculate-conversion.use-case";
 import { findAffectedUnits } from "@/application/conversion/find-affected-units";
 import {
@@ -16,6 +16,13 @@ import type {
 import { useLocale } from "@/i18n/locale-provider";
 import { formatUnitValue } from "@/lib/formatters";
 import { parseCanonicalNumber } from "@/lib/localized-number-input";
+import {
+  parseScenarioSearchParams,
+  SCENARIO_URL_DEBOUNCE_MS,
+  SCENARIO_URL_FLUSH_EVENT,
+  type ScenarioUrlState,
+  writeScenarioUrl,
+} from "@/lib/scenario-url";
 import { useConversionSettings } from "../settings/conversion-settings-provider";
 import { AmountInput } from "./amount-input";
 import { ConversionResults } from "./conversion-results";
@@ -29,16 +36,20 @@ type ConverterProps = Readonly<{
 
 export function Converter({ initialSourceUnit = "nx" }: ConverterProps) {
   const { messages, numberFormat } = useLocale();
-  const { rates } = useConversionSettings();
+  const { rates, saveRates } = useConversionSettings();
   const intlLocale = numberFormat.intlLocale;
   const [amountCanonical, setAmountCanonical] = useState("");
   const [sourceUnit, setSourceUnit] = useState<SourceUnit>(initialSourceUnit);
   const [currencyEnabled, setCurrencyEnabled] = useState(true);
+  const [isUrlReady, setIsUrlReady] = useState(false);
+  const hasInitializedUrl = useRef(false);
   const {
     rateText,
+    rateCanonical,
     rate,
     error: exchangeRateError,
     updateRateText,
+    applyCanonicalRate,
     restoreDefault,
   } = useExchangeRate();
   const { copiedTarget, statusMessage, copy } = useCopyFeedback();
@@ -68,6 +79,87 @@ export function Converter({ initialSourceUnit = "nx" }: ConverterProps) {
     values,
     messages.results,
   );
+  const scenarioStateRef = useRef<ScenarioUrlState>({
+    amountCanonical,
+    sourceUnit,
+    currencyEnabled,
+    exchangeRateCanonical: rateCanonical,
+    rates,
+  });
+
+  scenarioStateRef.current = {
+    amountCanonical,
+    sourceUnit,
+    currencyEnabled,
+    exchangeRateCanonical: rateCanonical,
+    rates,
+  };
+
+  useEffect(() => {
+    if (hasInitializedUrl.current) {
+      return;
+    }
+
+    hasInitializedUrl.current = true;
+
+    const overrides = parseScenarioSearchParams(window.location.search);
+    const nextCurrencyEnabled = overrides.currencyEnabled ?? currencyEnabled;
+    const requestedSourceUnit = overrides.sourceUnit ?? sourceUnit;
+    const nextSourceUnit =
+      !nextCurrencyEnabled && requestedSourceUnit === "currency" ? "nx" : requestedSourceUnit;
+
+    if (overrides.amountCanonical !== undefined) {
+      setAmountCanonical(overrides.amountCanonical);
+    }
+
+    if (nextSourceUnit !== sourceUnit) {
+      setSourceUnit(nextSourceUnit);
+    }
+
+    if (nextCurrencyEnabled !== currencyEnabled) {
+      setCurrencyEnabled(nextCurrencyEnabled);
+    }
+
+    if (overrides.exchangeRateCanonical !== undefined) {
+      applyCanonicalRate(overrides.exchangeRateCanonical);
+    }
+
+    if (overrides.rates !== undefined) {
+      saveRates(overrides.rates);
+    }
+
+    setIsUrlReady(true);
+  }, [applyCanonicalRate, currencyEnabled, saveRates, sourceUnit]);
+
+  useEffect(() => {
+    if (!isUrlReady) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      writeScenarioUrl({
+        amountCanonical,
+        sourceUnit,
+        currencyEnabled,
+        exchangeRateCanonical: rateCanonical,
+        rates,
+      });
+    }, SCENARIO_URL_DEBOUNCE_MS);
+
+    return () => window.clearTimeout(timeout);
+  }, [isUrlReady, amountCanonical, sourceUnit, currencyEnabled, rateCanonical, rates]);
+
+  useEffect(() => {
+    if (!isUrlReady) {
+      return;
+    }
+
+    const flush = () => writeScenarioUrl(scenarioStateRef.current);
+
+    window.addEventListener(SCENARIO_URL_FLUSH_EVENT, flush);
+
+    return () => window.removeEventListener(SCENARIO_URL_FLUSH_EVENT, flush);
+  }, [isUrlReady]);
 
   function handleToggleCurrency() {
     const nextEnabled = !currencyEnabled;

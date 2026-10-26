@@ -1,16 +1,35 @@
 "use client";
 
 import { ChevronDown, Globe2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { type MouseEvent, useEffect, useRef, useState } from "react";
 import { useLocale } from "@/i18n/locale-provider";
 import { LOCALE_DEFINITIONS, LOCALES, type Locale } from "@/i18n/locales";
+import { SCENARIO_URL_FLUSH_EVENT, SCENARIO_URL_UPDATED_EVENT } from "@/lib/scenario-url";
 
 export function LanguageSwitcher() {
   const { locale, messages, localeHrefs, rememberLocale } = useLocale();
   const [isOpen, setIsOpen] = useState(false);
+  const [urlSuffix, setUrlSuffix] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const activeOptionRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    const updateUrlSuffix = () => {
+      setUrlSuffix(`${window.location.search}${window.location.hash}`);
+    };
+
+    updateUrlSuffix();
+    window.addEventListener(SCENARIO_URL_UPDATED_EVENT, updateUrlSuffix);
+    window.addEventListener("popstate", updateUrlSuffix);
+    window.addEventListener("hashchange", updateUrlSuffix);
+
+    return () => {
+      window.removeEventListener(SCENARIO_URL_UPDATED_EVENT, updateUrlSuffix);
+      window.removeEventListener("popstate", updateUrlSuffix);
+      window.removeEventListener("hashchange", updateUrlSuffix);
+    };
+  }, []);
 
   useEffect(() => {
     if (!isOpen) {
@@ -56,9 +75,21 @@ export function LanguageSwitcher() {
     };
   }, [isOpen]);
 
-  function handleSelect(nextLocale: Locale) {
+  function handleSelect(event: MouseEvent<HTMLAnchorElement>, nextLocale: Locale) {
+    const isModifiedClick =
+      event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
+
+    if (isModifiedClick) {
+      return;
+    }
+
+    event.preventDefault();
     rememberLocale(nextLocale);
     setIsOpen(false);
+    window.dispatchEvent(new Event(SCENARIO_URL_FLUSH_EVENT));
+
+    const suffix = `${window.location.search}${window.location.hash}`;
+    window.location.assign(`${localeHrefs[nextLocale]}${suffix}`);
   }
 
   return (
@@ -94,10 +125,10 @@ export function LanguageSwitcher() {
               <a
                 key={option}
                 ref={isActive ? activeOptionRef : null}
-                href={localeHrefs[option]}
+                href={`${localeHrefs[option]}${urlSuffix}`}
                 hrefLang={LOCALE_DEFINITIONS[option].htmlLang}
                 aria-current={isActive ? "page" : undefined}
-                onClick={() => handleSelect(option)}
+                onClick={(event) => handleSelect(event, option)}
                 className={`flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-left text-xs font-bold transition-colors ${
                   isActive
                     ? "bg-amber-50 font-extrabold text-maple-orange-dark ring-1 ring-inset ring-amber-200/80"
