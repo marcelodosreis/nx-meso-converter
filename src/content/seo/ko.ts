@@ -86,7 +86,7 @@ export const KO_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
         answer: "네. 큰 값도 지원하며 계산은 내부적으로 정확하게 처리됩니다.",
       },
     ],
-    related: ["mesosToNx", "howToConvert", "slotGuide", "faq"],
+    related: ["mesosToNx", "howToConvert", "ratioGuide", "faq"],
     examples: { sourceUnit: "nx", amounts: [1_000, 5_000, 10_000], targetUnits: ["mesos"] },
   },
 
@@ -101,7 +101,7 @@ export const KO_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
         heading: "변환 방법",
         paragraphs: [
           "입력 단위에서 메소를 선택하고 금액을 입력하면 NX 결과가 표시됩니다.",
-          "관계는 설정의 슬롯당 NX와 슬롯당 메소 비율로 계산됩니다.",
+          "관계는 설정의 NX당 메소 비율로 계산됩니다.",
         ],
       },
       {
@@ -291,7 +291,8 @@ export const KO_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
 
   howToConvert: {
     title: "NX를 메소로 변환하는 방법 — 가이드",
-    description: "서버 비율과 슬롯, 환율을 사용해 NX를 메소로 변환하는 방법을 알아보세요.",
+    description:
+      "서버 비율과 NX당 메소 비율, 환율을 사용해 NX를 메소로 변환하는 방법을 알아보세요.",
     h1: "NX를 메소로 변환하는 방법",
     intro:
       "변환은 서버 비율에 따라 달라집니다. 비율을 조정할 수 있는 계산기를 사용하는 것이 가장 안전합니다.",
@@ -300,7 +301,7 @@ export const KO_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
       {
         heading: "관계 이해하기",
         paragraphs: [
-          "계산기는 슬롯당 NX와 슬롯당 메소로 NX와 메소의 관계를 계산합니다.",
+          "계산기는 NX당 메소 비율로 NX와 메소의 관계를 계산합니다.",
           "서버가 다른 관계를 사용한다면 설정에서 값을 조정하세요.",
         ],
       },
@@ -321,7 +322,7 @@ export const KO_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
     faqs: [
       {
         question: "변환 공식은 무엇인가요?",
-        answer: "슬롯당 NX와 슬롯당 메소 비율로 NX와 메소의 관계를 계산합니다.",
+        answer: "NX당 메소 비율로 NX와 메소의 관계를 계산합니다.",
       },
       {
         question: "달러 환율이 필요한가요?",
@@ -332,29 +333,24 @@ export const KO_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
         answer: "설정한 비율에 일관된 결과입니다. 잘못된 비율은 잘못된 결과를 만듭니다.",
       },
     ],
-    related: ["nxToMesos", "slotGuide", "whatIsNx", "faq"],
+    related: ["nxToMesos", "ratioGuide", "whatIsNx", "faq"],
   },
 
-  slotGuide: {
-    title: "NX와 메소로 슬롯 계산하는 방법 — 가이드",
-    description:
-      "슬롯당 NX와 슬롯당 메소 비율을 사용해 메이플스토리 변환을 계산하는 방법을 알아보세요.",
-    h1: "NX와 메소로 슬롯 계산하는 방법",
+  ratioGuide: {
+    title: "NX와 메소 비율 계산 방법 — 가이드",
+    description: "NX당 메소 비율을 사용해 메이플스토리 변환을 계산하는 방법을 알아보세요.",
+    h1: "NX와 메소 비율 계산 방법",
     intro:
-      "슬롯은 NX와 메소의 관계를 정하는 기준으로 사용할 수 있습니다. 값은 서버 비율에 따라 달라집니다.",
+      "NX당 메소 비율은 1 NX에 해당하는 메소 수를 정의합니다. 값은 서버 비율에 따라 달라집니다.",
     sourceUnit: "nx",
     sections: [
       {
-        heading: "슬롯 비율의 의미",
-        paragraphs: [
-          "계산기에서 슬롯 하나에 해당하는 NX와 메소를 입력하면 두 화폐의 관계를 계산할 수 있습니다.",
-        ],
+        heading: "비율의 의미",
+        paragraphs: ["계산기는 NX당 메소 비율을 사용해 두 화폐의 관계를 계산합니다."],
       },
       {
         heading: "값 조정",
-        paragraphs: [
-          "설정에서 서버 값을 입력하세요. NX와 메소의 직접 관계를 알고 있다면 그 값도 조정할 수 있습니다.",
-        ],
+        paragraphs: ["설정에서 서버의 NX당 메소 비율을 입력하세요."],
       },
       {
         heading: "보편적인 값은 없음",
@@ -363,16 +359,16 @@ export const KO_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
     ],
     faqs: [
       {
-        question: "슬롯이란 무엇인가요?",
-        answer: "이 계산기에서는 NX와 메소의 변환 비율을 정하는 기준을 의미합니다.",
+        question: "NX당 메소 비율이란 무엇인가요?",
+        answer: "이 계산기에서 1 NX에 해당하는 메소 수를 의미합니다.",
       },
       {
-        question: "슬롯 하나는 몇 메소인가요?",
-        answer: "설정한 슬롯당 메소 비율에 따라 달라집니다.",
+        question: "1 NX는 몇 메소인가요?",
+        answer: "설정한 NX당 메소 비율에 따라 달라집니다.",
       },
       {
-        question: "슬롯 하나는 몇 NX인가요?",
-        answer: "설정한 슬롯당 NX 비율에 따라 달라집니다.",
+        question: "1 메소는 몇 NX인가요?",
+        answer: "설정한 NX당 메소 비율의 역수입니다.",
       },
     ],
     related: ["nxToMesos", "howToConvert", "whatAreMesos", "faq"],
@@ -380,14 +376,14 @@ export const KO_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
 
   guideHub: {
     title: "NX와 메소 가이드 — 메이플스토리",
-    description: "메이플스토리의 NX, 메소, 슬롯, 변환에 관한 가이드와 계산기입니다.",
+    description: "메이플스토리의 NX, 메소, 변환에 관한 가이드와 계산기입니다.",
     h1: "NX와 메소 가이드",
     intro: "메이플스토리 화폐를 이해하고 서버 비율로 계산기를 사용하세요.",
     sourceUnit: "nx",
     sections: [
       {
         heading: "여기서 시작하세요",
-        paragraphs: ["NX와 메소가 무엇인지, 슬롯 비율로 어떻게 비교하는지 알아보세요."],
+        paragraphs: ["NX와 메소가 무엇인지, NX당 메소 비율로 어떻게 비교하는지 알아보세요."],
       },
       {
         heading: "실제로 변환하기",
@@ -399,7 +395,7 @@ export const KO_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
       "whatIsNx",
       "whatAreMesos",
       "howToConvert",
-      "slotGuide",
+      "ratioGuide",
       "nxToMesos",
       "mesosToNx",
       "nxToUsd",
@@ -410,7 +406,7 @@ export const KO_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
 
   faq: {
     title: "자주 묻는 질문 — NX 메소 변환기",
-    description: "NX, 메소, 달러, 슬롯, 설정 가능한 환율에 관한 답변입니다.",
+    description: "NX, 메소, 달러, 설정 가능한 환율에 관한 답변입니다.",
     h1: "자주 묻는 질문",
     intro: "계산기와 화폐, 변환 비율에 관한 빠른 답변입니다.",
     sourceUnit: "nx",

@@ -18,7 +18,7 @@ import { parseCanonicalNumber } from "./localized-number-input";
 import { parseScenarioSearchParams } from "./scenario-url";
 
 const DEFAULT_SHARE_AMOUNT = 5_000;
-const DEFAULT_SHARE_SOURCE_UNIT: SourceUnit = "nx";
+const DEFAULT_SHARE_SOURCE_UNIT: SourceUnit = "mesos";
 
 const OG_LOCALE: Record<Locale, string> = {
   pt: "pt_BR",

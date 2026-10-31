@@ -6,10 +6,10 @@ describe("share preview", () => {
     const preview = buildSharePreview("pt", "?amount=5000&unit=nx");
 
     expect(preview.nxValue).toBe("5.000");
-    expect(preview.mesosValue).toBe("45.000");
+    expect(preview.mesosValue).toBe("50.000");
     expect(preview.usdValue).toBe("US$ 5,00");
     expect(preview.title).toContain("5.000");
-    expect(preview.title).toContain("45.000");
+    expect(preview.title).toContain("50.000");
     expect(preview.title).toContain("Cenário compartilhado");
     expect(preview.description).toContain("Confira a conversão que eu montei");
   });
@@ -24,10 +24,7 @@ describe("share preview", () => {
   });
 
   it("applies custom rates from the shared scenario", () => {
-    const preview = buildSharePreview(
-      "en",
-      "?amount=4000&nxPerUsd=2000&nxPerSlot=6000&mesosPerSlot=30000",
-    );
+    const preview = buildSharePreview("en", "?amount=4000&unit=nx&nxPerUsd=2000&mesosPerNx=5");
 
     expect(preview.nxValue).toBe("4,000");
     expect(preview.mesosValue).toBe("20,000");

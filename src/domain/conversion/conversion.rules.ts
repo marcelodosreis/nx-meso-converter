@@ -15,18 +15,15 @@ export function isValidConversionRates(rates: ConversionRates): boolean {
   return (
     Number.isFinite(rates.nxPerUsd) &&
     rates.nxPerUsd > 0 &&
-    Number.isFinite(rates.nxPerSlot) &&
-    rates.nxPerSlot > 0 &&
-    Number.isFinite(rates.mesosPerSlot) &&
-    rates.mesosPerSlot > 0
+    Number.isFinite(rates.mesosPerNx) &&
+    rates.mesosPerNx > 0
   );
 }
 
 export function areConversionRatesEqual(left: ConversionRates, right: ConversionRates): boolean {
   return (
     areNumbersClose(left.nxPerUsd, right.nxPerUsd) &&
-    areNumbersClose(left.nxPerSlot, right.nxPerSlot) &&
-    areNumbersClose(left.mesosPerSlot, right.mesosPerSlot)
+    areNumbersClose(left.mesosPerNx, right.mesosPerNx)
   );
 }
 
@@ -35,7 +32,7 @@ export function isDefaultConversionRates(rates: ConversionRates): boolean {
 }
 
 export function getMesosPerNx(rates: ConversionRates): number {
-  return rates.mesosPerSlot / rates.nxPerSlot;
+  return rates.mesosPerNx;
 }
 
 export function toNx(

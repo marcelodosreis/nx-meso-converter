@@ -24,17 +24,12 @@ export function readStoredConversionRates(
       return null;
     }
 
-    const { nxPerUsd, nxPerSlot, mesosPerSlot } = parsedValue;
+    const rates = parseStoredRates(parsedValue);
 
-    if (
-      typeof nxPerUsd !== "number" ||
-      typeof nxPerSlot !== "number" ||
-      typeof mesosPerSlot !== "number"
-    ) {
+    if (rates === null) {
       return null;
     }
 
-    const rates: ConversionRates = { nxPerUsd, nxPerSlot, mesosPerSlot };
     return isValidConversionRates(rates) ? rates : null;
   } catch {
     return null;
@@ -55,6 +50,24 @@ export function writeStoredConversionRates(
   } catch {
     return false;
   }
+}
+
+function parseStoredRates(value: Record<string, unknown>): ConversionRates | null {
+  const { nxPerUsd, mesosPerNx, nxPerSlot, mesosPerSlot } = value;
+
+  if (typeof nxPerUsd !== "number") {
+    return null;
+  }
+
+  if (typeof mesosPerNx === "number") {
+    return { nxPerUsd, mesosPerNx };
+  }
+
+  if (typeof nxPerSlot === "number" && typeof mesosPerSlot === "number" && nxPerSlot > 0) {
+    return { nxPerUsd, mesosPerNx: mesosPerSlot / nxPerSlot };
+  }
+
+  return null;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

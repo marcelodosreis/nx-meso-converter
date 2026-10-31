@@ -40,6 +40,7 @@ export type Messages = Readonly<{
     quickValues: string;
     quickShort: string;
     useValue: string;
+    ratio: (mesosPerNx: string) => string;
   }>;
   units: Readonly<{
     legend: string;
@@ -90,15 +91,8 @@ export type Messages = Readonly<{
     close: string;
     nxPerUsd: string;
     nxPerUsdHint: string;
-    nxPerSlot: string;
-    nxPerSlotHint: string;
-    mesosPerSlot: string;
-    mesosPerSlotHint: string;
     mesosPerNx: string;
     mesosPerNxHint: string;
-    currentRelation: string;
-    derived: (mesosPerNx: string) => string;
-    syncNote: string;
     note: string;
     reset: string;
     cancel: string;
@@ -155,6 +149,7 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         quickValues: "Valores rápidos",
         quickShort: "Atalhos",
         useValue: "Usar valor",
+        ratio: (mesosPerNx) => `1 NX = ${mesosPerNx} mesos`,
       },
       units: {
         legend: "Unidade de entrada",
@@ -230,16 +225,8 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         close: "Fechar configurações",
         nxPerUsd: "NX por US$",
         nxPerUsdHint: "Quantidade de NX equivalente a 1 dólar.",
-        nxPerSlot: "NX por slot",
-        nxPerSlotHint: "Quantidade de NX equivalente a 1 slot.",
-        mesosPerSlot: "Mesos por slot",
-        mesosPerSlotHint: "Quantidade de mesos equivalente a 1 slot.",
         mesosPerNx: "Mesos por NX",
-        mesosPerNxHint:
-          "Taxa direta entre NX e mesos. Alterar este campo atualiza os mesos por slot.",
-        currentRelation: "Relação atual",
-        derived: (mesosPerNx) => `1 NX = ${mesosPerNx} mesos`,
-        syncNote: "NX por slot, mesos por slot e mesos por NX são sincronizados automaticamente.",
+        mesosPerNxHint: "Quantidade de mesos equivalente a 1 NX.",
         note: "As alterações são aplicadas a todas as conversões e salvas neste navegador.",
         reset: "Restaurar padrões",
         cancel: "Cancelar",
@@ -284,6 +271,7 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         quickValues: "Quick values",
         quickShort: "Quick",
         useValue: "Use value",
+        ratio: (mesosPerNx) => `1 NX = ${mesosPerNx} mesos`,
       },
       units: {
         legend: "Input unit",
@@ -359,15 +347,8 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         close: "Close settings",
         nxPerUsd: "NX per US$",
         nxPerUsdHint: "Amount of NX equal to US$ 1.",
-        nxPerSlot: "NX per slot",
-        nxPerSlotHint: "Amount of NX equal to one slot.",
-        mesosPerSlot: "Mesos per slot",
-        mesosPerSlotHint: "Amount of mesos equal to one slot.",
         mesosPerNx: "Mesos per NX",
-        mesosPerNxHint: "Direct NX-to-mesos rate. Changing this field updates mesos per slot.",
-        currentRelation: "Current ratio",
-        derived: (mesosPerNx) => `1 NX = ${mesosPerNx} mesos`,
-        syncNote: "NX per slot, mesos per slot, and mesos per NX are synchronized automatically.",
+        mesosPerNxHint: "Amount of mesos equal to 1 NX.",
         note: "Changes apply to all conversions and are saved in this browser.",
         reset: "Restore defaults",
         cancel: "Cancel",
@@ -412,6 +393,7 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         quickValues: "빠른 값",
         quickShort: "빠른 값",
         useValue: "값 사용",
+        ratio: (mesosPerNx) => `1 NX = ${mesosPerNx} 메소`,
       },
       units: {
         legend: "입력 단위",
@@ -487,15 +469,8 @@ export const LOCALE_DEFINITIONS: Record<Locale, LocaleDefinition> = {
         close: "설정 닫기",
         nxPerUsd: "US$당 NX",
         nxPerUsdHint: "1달러에 해당하는 NX 수입니다.",
-        nxPerSlot: "슬롯당 NX",
-        nxPerSlotHint: "슬롯 1개에 해당하는 NX 수입니다.",
-        mesosPerSlot: "슬롯당 메소",
-        mesosPerSlotHint: "슬롯 1개에 해당하는 메소 수입니다.",
         mesosPerNx: "NX당 메소",
-        mesosPerNxHint: "NX와 메소의 직접 환율입니다. 변경하면 슬롯당 메소가 업데이트됩니다.",
-        currentRelation: "현재 비율",
-        derived: (mesosPerNx) => `1 NX = ${mesosPerNx} 메소`,
-        syncNote: "슬롯당 NX, 슬롯당 메소, NX당 메소는 자동으로 동기화됩니다.",
+        mesosPerNxHint: "1 NX에 해당하는 메소 수입니다.",
         note: "변경 사항은 모든 변환에 적용되며 이 브라우저에 저장됩니다.",
         reset: "기본값 복원",
         cancel: "취소",

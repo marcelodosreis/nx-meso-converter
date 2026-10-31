@@ -25,8 +25,8 @@ describe("formatUnitValue", () => {
     expect(formatUnitValue("nx", amount, pt)).toBe("10.000");
     expect(formatUnitValue("nx", amount, en)).toBe("10,000");
     expect(formatUnitValue("nx", amount, ko)).toBe("10,000");
-    expect(formatUnitValue("mesos", mesos, pt)).toBe("90.000");
-    expect(formatUnitValue("mesos", mesos, en)).toBe("90,000");
+    expect(formatUnitValue("mesos", mesos, pt)).toBe("100.000");
+    expect(formatUnitValue("mesos", mesos, en)).toBe("100,000");
     expect(formatUnitValue("usd", 10, pt)).toBe("US$ 10,00");
     expect(formatUnitValue("usd", 10, en)).toBe("US$ 10.00");
     expect(formatUnitValue("currency", currency, pt)).toBe("54,00");

@@ -22,7 +22,7 @@ export function HomePage({ locale }: HomePageProps) {
       <AppContent
         initialLocale={locale}
         localeHrefs={getRouteLocaleHrefs("home")}
-        initialSourceUnit="nx"
+        initialSourceUnit="mesos"
         intro={<h1 className="sr-only">{page.h1}</h1>}
         content={
           <nav className="mt-3 text-center">

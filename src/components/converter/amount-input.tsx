@@ -1,12 +1,13 @@
 "use client";
 
-import { X } from "lucide-react";
+import { ArrowLeftRight, X } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import type { SourceUnit } from "@/domain/conversion/conversion.types";
 import { useLocale } from "@/i18n/locale-provider";
 import {
   formatCanonicalNumberInput,
   formatLocalizedNumberInput,
+  numberToCanonicalNumberInput,
 } from "@/lib/localized-number-input";
 import { QuickAmounts } from "./quick-amounts";
 import { UNIT_ICONS } from "./unit-icons";
@@ -17,6 +18,7 @@ type AmountInputProps = Readonly<{
   unit: SourceUnit;
   currencyEnabled: boolean;
   error: string | null;
+  mesosPerNx: number;
   onChange: (value: string) => void;
   onUnitChange: (unit: SourceUnit) => void;
   onClear: () => void;
@@ -33,11 +35,16 @@ export function AmountInput({
   unit,
   currencyEnabled,
   error,
+  mesosPerNx,
   onChange,
   onUnitChange,
   onClear,
 }: AmountInputProps) {
   const { messages, numberFormat } = useLocale();
+  const ratioText = formatCanonicalNumberInput(
+    numberToCanonicalNumberInput(mesosPerNx, 0, 6),
+    numberFormat,
+  );
   const inputRef = useRef<HTMLInputElement>(null);
   const pendingCaretRef = useRef<number | null>(null);
   const displayValue = formatCanonicalNumberInput(value, numberFormat);
@@ -88,12 +95,18 @@ export function AmountInput({
 
   return (
     <div>
-      <label
-        htmlFor={AMOUNT_INPUT_ID}
-        className="mb-1.5 block text-base font-extrabold tracking-wide text-maple-ink lg:text-lg"
-      >
-        {messages.amount.label}
-      </label>
+      <div className="mb-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
+        <label
+          htmlFor={AMOUNT_INPUT_ID}
+          className="text-base font-extrabold tracking-wide text-maple-ink lg:text-lg"
+        >
+          {messages.amount.label}
+        </label>
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-100/80 bg-white/70 px-2.5 py-0.5 text-[0.6875rem] font-bold text-sky-800/85">
+          <ArrowLeftRight aria-hidden="true" size={11} strokeWidth={2.6} />
+          {messages.amount.ratio(ratioText)}
+        </span>
+      </div>
 
       <div
         className={`flex items-stretch rounded-2xl border bg-white shadow-control transition-[border-color,box-shadow] focus-within:bg-white focus-within:ring-4 ${

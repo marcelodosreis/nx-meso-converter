@@ -10,7 +10,7 @@ export const SEO_PAGE_KEYS = [
   "whatIsNx",
   "whatAreMesos",
   "howToConvert",
-  "slotGuide",
+  "ratioGuide",
   "guideHub",
   "faq",
 ] as const;
@@ -69,7 +69,7 @@ export const GUIDE_SOURCE_KEYS: readonly SeoPageKey[] = [
   "whatIsNx",
   "whatAreMesos",
   "howToConvert",
-  "slotGuide",
+  "ratioGuide",
   "faq",
 ];
 
@@ -77,25 +77,25 @@ export const GUIDE_META: Record<Locale, GuideMeta> = {
   pt: {
     title: "Guia de NX e Mesos para MapleStory — NX Mesos Converter",
     description:
-      "Guia completo sobre NX, mesos, dólar, slots e conversões no MapleStory. Entenda as moedas e use a calculadora com as taxas do seu servidor.",
+      "Guia completo sobre NX, mesos, dólar e conversões no MapleStory. Entenda as moedas e use a calculadora com as taxas do seu servidor.",
     h1: "Guia de NX, mesos e conversões para MapleStory",
     intro:
-      "Tudo o que você precisa para entender NX, mesos, dólar, slots e taxas configuráveis em um único lugar.",
+      "Tudo o que você precisa para entender NX, mesos, dólar e taxas configuráveis em um único lugar.",
   },
   en: {
     title: "NX and Mesos Guide for MapleStory — NX Mesos Converter",
     description:
-      "A complete guide to NX, mesos, dollars, slots, and conversions in MapleStory. Learn the currencies and use the calculator with your server's rates.",
+      "A complete guide to NX, mesos, dollars, and conversions in MapleStory. Learn the currencies and use the calculator with your server's rates.",
     h1: "NX, Mesos, and Conversion Guide for MapleStory",
     intro:
-      "Everything you need to understand NX, mesos, dollars, slots, and adjustable rates in one place.",
+      "Everything you need to understand NX, mesos, dollars, and adjustable rates in one place.",
   },
   ko: {
     title: "메이플스토리 NX·메소 가이드 — NX 메소 변환기",
     description:
-      "메이플스토리의 NX, 메소, 달러, 슬롯, 변환에 관한 종합 가이드입니다. 서버 비율로 계산기를 사용하세요.",
+      "메이플스토리의 NX, 메소, 달러, 변환에 관한 종합 가이드입니다. 서버 비율로 계산기를 사용하세요.",
     h1: "메이플스토리 NX·메소·변환 가이드",
-    intro: "NX, 메소, 달러, 슬롯, 설정 가능한 비율을 한곳에서 이해하세요.",
+    intro: "NX, 메소, 달러, 설정 가능한 비율을 한곳에서 이해하세요.",
   },
 };
 

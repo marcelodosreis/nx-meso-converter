@@ -36,7 +36,7 @@ type ConverterProps = Readonly<{
   isLoading?: boolean;
 }>;
 
-export function Converter({ initialSourceUnit = "nx", isLoading = false }: ConverterProps) {
+export function Converter({ initialSourceUnit = "mesos", isLoading = false }: ConverterProps) {
   const { messages, numberFormat } = useLocale();
   const { rates, isHydrated: settingsHydrated, saveRates } = useConversionSettings();
   const intlLocale = numberFormat.intlLocale;
@@ -226,6 +226,7 @@ export function Converter({ initialSourceUnit = "nx", isLoading = false }: Conve
               unit={sourceUnit}
               currencyEnabled={currencyEnabled}
               error={amountError}
+              mesosPerNx={rates.mesosPerNx}
               onChange={setAmountCanonical}
               onUnitChange={setSourceUnit}
               onClear={() => setAmountCanonical("")}

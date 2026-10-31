@@ -8,6 +8,5 @@ export type ConversionValues = Readonly<Record<ConversionUnit, number>>;
 
 export type ConversionRates = Readonly<{
   nxPerUsd: number;
-  nxPerSlot: number;
-  mesosPerSlot: number;
+  mesosPerNx: number;
 }>;

@@ -40,11 +40,12 @@ describe("calculateConversion", () => {
   });
 
   it("accepts every allowed source unit", () => {
+    const sampleNx = 5_000;
     const inputs: Record<SourceUnit, number> = {
-      nx: rates.nxPerSlot,
-      usd: rates.nxPerSlot / rates.nxPerUsd,
-      currency: (rates.nxPerSlot / rates.nxPerUsd) * DEFAULT_USD_CURRENCY_RATE,
-      mesos: rates.nxPerSlot * getMesosPerNx(rates),
+      nx: sampleNx,
+      usd: sampleNx / rates.nxPerUsd,
+      currency: (sampleNx / rates.nxPerUsd) * DEFAULT_USD_CURRENCY_RATE,
+      mesos: sampleNx * getMesosPerNx(rates),
     };
 
     for (const sourceUnit of SOURCE_UNITS) {
@@ -57,7 +58,7 @@ describe("calculateConversion", () => {
 
       const values = expectSuccess(result);
 
-      expect(values.nx).toBeCloseTo(rates.nxPerSlot, 8);
+      expect(values.nx).toBeCloseTo(sampleNx, 8);
     }
   });
 
@@ -79,8 +80,7 @@ describe("calculateConversion", () => {
   it("applies custom conversion rates", () => {
     const customRates = {
       nxPerUsd: 2_000,
-      nxPerSlot: 6_000,
-      mesosPerSlot: 30_000,
+      mesosPerNx: 5,
     };
     const result = calculateConversion({
       amount: 4_000,

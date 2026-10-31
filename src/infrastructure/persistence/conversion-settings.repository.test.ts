@@ -25,10 +25,18 @@ function createMemoryStorage(initialValue: string | null = null): {
 
 describe("conversion settings repository", () => {
   it("reads valid stored rates", () => {
-    const rates = { nxPerUsd: 2_000, nxPerSlot: 6_000, mesosPerSlot: 30_000 };
+    const rates = { nxPerUsd: 2_000, mesosPerNx: 5 };
     const { storage } = createMemoryStorage(JSON.stringify(rates));
 
     expect(readStoredConversionRates(storage)).toEqual(rates);
+  });
+
+  it("migrates legacy slot-based rates", () => {
+    const { storage } = createMemoryStorage(
+      JSON.stringify({ nxPerUsd: 2_000, nxPerSlot: 6_000, mesosPerSlot: 30_000 }),
+    );
+
+    expect(readStoredConversionRates(storage)).toEqual({ nxPerUsd: 2_000, mesosPerNx: 5 });
   });
 
   it("ignores malformed or invalid stored rates", () => {
@@ -37,8 +45,8 @@ describe("conversion settings repository", () => {
       "",
       "{}",
       "[]",
-      JSON.stringify({ nxPerUsd: 0, nxPerSlot: 6_000, mesosPerSlot: 30_000 }),
-      JSON.stringify({ nxPerUsd: "1000", nxPerSlot: 6_000, mesosPerSlot: 30_000 }),
+      JSON.stringify({ nxPerUsd: 0, mesosPerNx: 5 }),
+      JSON.stringify({ nxPerUsd: "1000", mesosPerNx: 5 }),
     ];
 
     for (const storedValue of invalidValues) {
@@ -50,7 +58,7 @@ describe("conversion settings repository", () => {
 
   it("writes valid rates and rejects invalid ones", () => {
     const { storage, getStoredValue } = createMemoryStorage();
-    const customRates = { nxPerUsd: 2_000, nxPerSlot: 6_000, mesosPerSlot: 30_000 };
+    const customRates = { nxPerUsd: 2_000, mesosPerNx: 5 };
 
     expect(writeStoredConversionRates(customRates, storage)).toBe(true);
     expect(JSON.parse(getStoredValue() ?? "null")).toEqual(customRates);

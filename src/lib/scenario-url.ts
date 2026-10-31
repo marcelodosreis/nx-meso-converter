@@ -19,6 +19,7 @@ const SCENARIO_KEYS = [
   "currency",
   "rate",
   "nxPerUsd",
+  "mesosPerNx",
   "nxPerSlot",
   "mesosPerSlot",
 ] as const;
@@ -67,8 +68,7 @@ export function buildScenarioSearchParams(state: ScenarioUrlState): URLSearchPar
 
   if (!isDefaultConversionRates(state.rates)) {
     params.set("nxPerUsd", numberToCanonicalNumberInput(state.rates.nxPerUsd, 0, 20));
-    params.set("nxPerSlot", numberToCanonicalNumberInput(state.rates.nxPerSlot, 0, 20));
-    params.set("mesosPerSlot", numberToCanonicalNumberInput(state.rates.mesosPerSlot, 0, 20));
+    params.set("mesosPerNx", numberToCanonicalNumberInput(state.rates.mesosPerNx, 0, 20));
   }
 
   return params;
@@ -111,13 +111,19 @@ export function parseScenarioSearchParams(search: string): ScenarioUrlOverrides 
   }
 
   const nxPerUsd = parseCanonicalNumber(params.get("nxPerUsd") ?? "");
+  const mesosPerNx = parseCanonicalNumber(params.get("mesosPerNx") ?? "");
   const nxPerSlot = parseCanonicalNumber(params.get("nxPerSlot") ?? "");
   const mesosPerSlot = parseCanonicalNumber(params.get("mesosPerSlot") ?? "");
 
-  if (nxPerUsd !== null && nxPerSlot !== null && mesosPerSlot !== null) {
-    const rates: ConversionRates = { nxPerUsd, nxPerSlot, mesosPerSlot };
+  if (nxPerUsd !== null) {
+    const rates =
+      mesosPerNx !== null
+        ? { nxPerUsd, mesosPerNx }
+        : nxPerSlot !== null && nxPerSlot > 0 && mesosPerSlot !== null
+          ? { nxPerUsd, mesosPerNx: mesosPerSlot / nxPerSlot }
+          : null;
 
-    if (isValidConversionRates(rates)) {
+    if (rates !== null && isValidConversionRates(rates)) {
       overrides.rates = rates;
     }
   }

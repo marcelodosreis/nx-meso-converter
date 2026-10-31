@@ -33,21 +33,10 @@ describe("conversion rules", () => {
     );
   });
 
-  it("uses the editable slot and meso rates to derive mesos per NX", () => {
-    expect(getMesosPerNx(DEFAULT_CONVERSION_RATES)).toBe(9);
-    expect(fromNx(1, "mesos", DEFAULT_USD_CURRENCY_RATE, DEFAULT_CONVERSION_RATES)).toBe(9);
-    expect(toNx(9, "mesos", DEFAULT_USD_CURRENCY_RATE, DEFAULT_CONVERSION_RATES)).toBe(1);
-  });
-
-  it("keeps the slot-to-meso relationship consistent", () => {
-    expect(
-      fromNx(
-        DEFAULT_CONVERSION_RATES.nxPerSlot,
-        "mesos",
-        DEFAULT_USD_CURRENCY_RATE,
-        DEFAULT_CONVERSION_RATES,
-      ),
-    ).toBe(DEFAULT_CONVERSION_RATES.mesosPerSlot);
+  it("uses the configured NX-to-mesos ratio", () => {
+    expect(getMesosPerNx(DEFAULT_CONVERSION_RATES)).toBe(10);
+    expect(fromNx(1, "mesos", DEFAULT_USD_CURRENCY_RATE, DEFAULT_CONVERSION_RATES)).toBe(10);
+    expect(toNx(10, "mesos", DEFAULT_USD_CURRENCY_RATE, DEFAULT_CONVERSION_RATES)).toBe(1);
   });
 
   it("converts between USD and the generic currency using the configured rate", () => {
@@ -107,11 +96,11 @@ describe("conversion rules", () => {
         nxPerUsd: DEFAULT_CONVERSION_RATES.nxPerUsd * 2,
       }),
     ).toBe(false);
-    expect(isDefaultConversionRates({ ...DEFAULT_CONVERSION_RATES, nxPerSlot: 5_001 })).toBe(false);
+    expect(isDefaultConversionRates({ ...DEFAULT_CONVERSION_RATES, mesosPerNx: 11 })).toBe(false);
     expect(
       areConversionRatesEqual(DEFAULT_CONVERSION_RATES, {
         ...DEFAULT_CONVERSION_RATES,
-        nxPerSlot: DEFAULT_CONVERSION_RATES.nxPerSlot + 0.000_000_000_1,
+        mesosPerNx: DEFAULT_CONVERSION_RATES.mesosPerNx + 0.000_000_000_1,
       }),
     ).toBe(true);
   });
@@ -127,13 +116,13 @@ describe("conversion rules", () => {
     expect(
       isValidConversionRates({
         ...DEFAULT_CONVERSION_RATES,
-        nxPerSlot: Number.NaN,
+        mesosPerNx: Number.NaN,
       }),
     ).toBe(false);
     expect(
       isValidConversionRates({
         ...DEFAULT_CONVERSION_RATES,
-        mesosPerSlot: Number.POSITIVE_INFINITY,
+        mesosPerNx: Number.POSITIVE_INFINITY,
       }),
     ).toBe(false);
   });

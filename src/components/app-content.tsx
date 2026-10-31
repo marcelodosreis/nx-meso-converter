@@ -25,7 +25,7 @@ type AppContentProps = Readonly<{
 export function AppContent({
   initialLocale,
   localeHrefs,
-  initialSourceUnit = "nx",
+  initialSourceUnit = "mesos",
   intro,
   content,
 }: AppContentProps) {

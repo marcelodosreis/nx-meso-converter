@@ -46,7 +46,7 @@ describe("findAffectedUnits", () => {
       amount: 10_000,
       sourceUnit: "nx",
       usdCurrencyRate: DEFAULT_USD_CURRENCY_RATE,
-      rates: { ...DEFAULT_CONVERSION_RATES, mesosPerSlot: 50_000 },
+      rates: { ...DEFAULT_CONVERSION_RATES, mesosPerNx: 12 },
     };
 
     expect(findAffectedUnits(command, getValues(command))).toEqual(new Set(["mesos"]));
@@ -57,7 +57,7 @@ describe("findAffectedUnits", () => {
       amount: 0,
       sourceUnit: "nx",
       usdCurrencyRate: DEFAULT_USD_CURRENCY_RATE,
-      rates: { ...DEFAULT_CONVERSION_RATES, mesosPerSlot: 50_000 },
+      rates: { ...DEFAULT_CONVERSION_RATES, mesosPerNx: 12 },
     };
 
     expect(findAffectedUnits(command, getValues(command))).toEqual(new Set());

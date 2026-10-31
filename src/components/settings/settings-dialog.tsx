@@ -6,7 +6,6 @@ import {
   type ConversionSettingsDraft,
   type ConversionSettingsDraftField,
   createConversionSettingsDraft,
-  getDraftMesosPerNx,
   parseConversionSettingsDraft,
   updateConversionSettingsDraft,
 } from "@/application/settings/conversion-settings-draft";
@@ -19,7 +18,6 @@ import { useLocale } from "@/i18n/locale-provider";
 import {
   formatCanonicalNumberInput,
   normalizeLocalizedNumberInput,
-  numberToCanonicalNumberInput,
   parseCanonicalNumber,
 } from "@/lib/localized-number-input";
 import { useConversionSettings } from "./conversion-settings-provider";
@@ -31,15 +29,11 @@ type SettingsDialogProps = Readonly<{
 
 const SETTINGS_FIELDS = [
   "nxPerUsd",
-  "nxPerSlot",
-  "mesosPerSlot",
   "mesosPerNx",
 ] as const satisfies readonly ConversionSettingsDraftField[];
 
 const SETTINGS_FIELD_IDS: Record<ConversionSettingsDraftField, string> = {
   nxPerUsd: "settings-nx-per-usd",
-  nxPerSlot: "settings-nx-per-slot",
-  mesosPerSlot: "settings-mesos-per-slot",
   mesosPerNx: "settings-mesos-per-nx",
 };
 
@@ -91,11 +85,6 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   }, [open]);
 
   const hasCustomRates = !isDefaultConversionRates(rates);
-  const mesosPerNx = getDraftMesosPerNx(drafts);
-  const derivedValue =
-    mesosPerNx === null
-      ? "—"
-      : formatCanonicalNumberInput(numberToCanonicalNumberInput(mesosPerNx, 0, 8), numberFormat);
 
   function updateDraft(field: ConversionSettingsDraftField, value: string) {
     const canonicalValue = normalizeLocalizedNumberInput(value, numberFormat);
@@ -192,24 +181,6 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
             onChange={(value) => updateDraft("nxPerUsd", value)}
           />
           <SettingsRateField
-            id="settings-nx-per-slot"
-            label={messages.settings.nxPerSlot}
-            hint={messages.settings.nxPerSlotHint}
-            displayValue={formatCanonicalNumberInput(drafts.nxPerSlot, numberFormat)}
-            isInvalid={invalidFields.has("nxPerSlot")}
-            errorMessage={messages.settings.invalidField}
-            onChange={(value) => updateDraft("nxPerSlot", value)}
-          />
-          <SettingsRateField
-            id="settings-mesos-per-slot"
-            label={messages.settings.mesosPerSlot}
-            hint={messages.settings.mesosPerSlotHint}
-            displayValue={formatCanonicalNumberInput(drafts.mesosPerSlot, numberFormat)}
-            isInvalid={invalidFields.has("mesosPerSlot")}
-            errorMessage={messages.settings.invalidField}
-            onChange={(value) => updateDraft("mesosPerSlot", value)}
-          />
-          <SettingsRateField
             id="settings-mesos-per-nx"
             label={messages.settings.mesosPerNx}
             hint={messages.settings.mesosPerNxHint}
@@ -220,21 +191,7 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
           />
         </div>
 
-        {mesosPerNx !== null ? (
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 rounded-xl border border-amber-200/70 bg-amber-50/75 px-3 py-2">
-            <span className="text-[0.625rem] font-extrabold uppercase tracking-[0.12em] text-amber-900/75">
-              {messages.settings.currentRelation}
-            </span>
-            <p className="font-display text-sm font-semibold text-amber-950">
-              {messages.settings.derived(derivedValue)}
-            </p>
-          </div>
-        ) : null}
-
-        <p className="mt-2 text-[0.6875rem] font-semibold leading-relaxed text-maple-muted">
-          {messages.settings.syncNote}
-        </p>
-        <p className="mt-1 text-[0.6875rem] font-semibold leading-relaxed text-maple-muted">
+        <p className="mt-3 text-[0.6875rem] font-semibold leading-relaxed text-maple-muted">
           {messages.settings.note}
         </p>
 

@@ -91,7 +91,7 @@ export const PT_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
         answer: "Sim. A calculadora aceita valores grandes e mantém a precisão interna do cálculo.",
       },
     ],
-    related: ["mesosToNx", "howToConvert", "slotGuide", "faq"],
+    related: ["mesosToNx", "howToConvert", "ratioGuide", "faq"],
     examples: { sourceUnit: "nx", amounts: [1_000, 5_000, 10_000], targetUnits: ["mesos"] },
   },
 
@@ -108,7 +108,7 @@ export const PT_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
         heading: "Como fazer a conversão",
         paragraphs: [
           "Selecione a unidade de entrada Mesos, digite o valor e confira o resultado em NX.",
-          "A relação é definida pelas taxas de NX por slot e mesos por slot configuradas no conversor.",
+          "A relação é definida pela taxa de mesos por NX configurada no conversor.",
         ],
       },
       {
@@ -316,7 +316,7 @@ export const PT_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
   howToConvert: {
     title: "Como converter NX em Mesos — Guia",
     description:
-      "Aprenda a converter NX em mesos usando as taxas do seu servidor, incluindo slots e cotação.",
+      "Aprenda a converter NX em mesos usando as taxas do seu servidor, incluindo a taxa de mesos por NX e cotação.",
     h1: "Como converter NX em mesos",
     intro:
       "A conversão depende das taxas do seu servidor. O caminho mais confiável é usar uma calculadora com taxas ajustáveis.",
@@ -325,7 +325,7 @@ export const PT_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
       {
         heading: "Entenda a relação",
         paragraphs: [
-          "O conversor usa a quantidade de NX por slot e de mesos por slot para calcular a relação entre NX e mesos.",
+          "O conversor usa a taxa de mesos por NX para calcular a relação entre NX e mesos.",
           "Se o seu servidor usa outra relação, ajuste os valores em Configurações antes de converter.",
         ],
       },
@@ -346,8 +346,7 @@ export const PT_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
     faqs: [
       {
         question: "Qual é a fórmula da conversão?",
-        answer:
-          "A relação entre NX e mesos é calculada a partir das taxas de NX por slot e mesos por slot.",
+        answer: "A relação entre NX e mesos é calculada a partir da taxa de mesos por NX.",
       },
       {
         question: "Preciso saber o valor do dólar?",
@@ -359,29 +358,26 @@ export const PT_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
           "Ele é coerente com as taxas que você configurar. Taxas erradas geram resultados errados.",
       },
     ],
-    related: ["nxToMesos", "slotGuide", "whatIsNx", "faq"],
+    related: ["nxToMesos", "ratioGuide", "whatIsNx", "faq"],
   },
 
-  slotGuide: {
-    title: "Como calcular slots em NX e mesos — Guia",
-    description:
-      "Entenda como usar as taxas de NX por slot e mesos por slot para calcular conversões no MapleStory.",
-    h1: "Como calcular slots em NX e mesos",
+  ratioGuide: {
+    title: "Como calcular a relação entre NX e mesos — Guia",
+    description: "Entenda como usar a taxa de mesos por NX para calcular conversões no MapleStory.",
+    h1: "Como calcular a relação entre NX e mesos",
     intro:
-      "Slots podem ser usados como referência para definir a relação entre NX e mesos. O valor depende das taxas do seu servidor.",
+      "A taxa de mesos por NX define quantos mesos equivalem a 1 NX. O valor depende do seu servidor.",
     sourceUnit: "nx",
     sections: [
       {
-        heading: "O que a taxa de slot representa",
+        heading: "O que a taxa representa",
         paragraphs: [
-          "O conversor permite informar quantos NX e quantos mesos correspondem a um slot. A partir disso, ele calcula a relação entre as moedas.",
+          "O conversor usa a taxa de mesos por NX para calcular a relação entre as moedas.",
         ],
       },
       {
         heading: "Ajuste os valores",
-        paragraphs: [
-          "Abra Configurações e informe os valores do seu servidor. Se você já sabe a relação direta entre NX e mesos, também pode ajustá-la.",
-        ],
+        paragraphs: ["Abra Configurações e informe a taxa de mesos por NX do seu servidor."],
       },
       {
         heading: "Não existe valor universal",
@@ -392,17 +388,16 @@ export const PT_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
     ],
     faqs: [
       {
-        question: "O que é um slot?",
-        answer:
-          "No contexto do conversor, slot é uma referência usada para definir quantos NX e mesos entram na taxa de conversão.",
+        question: "O que é a taxa de mesos por NX?",
+        answer: "É a quantidade de mesos equivalente a 1 NX usada nas conversões do conversor.",
       },
       {
-        question: "Quantos mesos vale um slot?",
-        answer: "Depende da taxa de mesos por slot configurada.",
+        question: "Quantos mesos vale 1 NX?",
+        answer: "Depende da taxa de mesos por NX configurada.",
       },
       {
-        question: "Quantos NX vale um slot?",
-        answer: "Depende da taxa de NX por slot configurada.",
+        question: "Quantos NX valem 1 meso?",
+        answer: "É o inverso da taxa de mesos por NX configurada.",
       },
     ],
     related: ["nxToMesos", "howToConvert", "whatAreMesos", "faq"],
@@ -411,7 +406,7 @@ export const PT_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
   guideHub: {
     title: "Guias de NX e Mesos — MapleStory",
     description:
-      "Guias sobre NX, mesos, slots e conversões para MapleStory, com calculadora e taxas ajustáveis.",
+      "Guias sobre NX, mesos e conversões para MapleStory, com calculadora e taxas ajustáveis.",
     h1: "Guias de NX e Mesos",
     intro: "Entenda as moedas do MapleStory e use a calculadora com as taxas do seu servidor.",
     sourceUnit: "nx",
@@ -419,7 +414,7 @@ export const PT_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
       {
         heading: "Comece por aqui",
         paragraphs: [
-          "Aprenda o que é NX, o que são mesos e como as taxas de slot podem ajudar a comparar valores.",
+          "Aprenda o que é NX, o que são mesos e como a taxa de mesos por NX pode ajudar a comparar valores.",
         ],
       },
       {
@@ -434,7 +429,7 @@ export const PT_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
       "whatIsNx",
       "whatAreMesos",
       "howToConvert",
-      "slotGuide",
+      "ratioGuide",
       "nxToMesos",
       "mesosToNx",
       "nxToUsd",
@@ -446,7 +441,7 @@ export const PT_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
   faq: {
     title: "Perguntas Frequentes — NX Mesos Converter",
     description:
-      "Respostas sobre conversão de NX, mesos, dólar, slots e taxas configuráveis no MapleStory.",
+      "Respostas sobre conversão de NX, mesos, dólar e taxas configuráveis no MapleStory.",
     h1: "Perguntas frequentes",
     intro: "Respostas rápidas sobre o conversor, as moedas e as taxas usadas nos cálculos.",
     sourceUnit: "nx",

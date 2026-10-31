@@ -2,67 +2,46 @@ import { describe, expect, it } from "vitest";
 import { DEFAULT_CONVERSION_RATES } from "@/domain/conversion/conversion.constants";
 import {
   createConversionSettingsDraft,
-  getDraftMesosPerNx,
   parseConversionSettingsDraft,
   updateConversionSettingsDraft,
 } from "./conversion-settings-draft";
 
 describe("conversion settings draft", () => {
-  it("creates a synchronized draft from rates", () => {
+  it("creates a draft from rates", () => {
     const draft = createConversionSettingsDraft(DEFAULT_CONVERSION_RATES);
 
     expect(draft).toEqual({
       nxPerUsd: "1000",
-      nxPerSlot: "5000",
-      mesosPerSlot: "45000",
-      mesosPerNx: "9",
+      mesosPerNx: "10",
     });
   });
 
-  it("updates mesos per slot when the direct NX-to-mesos rate changes", () => {
+  it("updates the NX-to-mesos ratio", () => {
     const initialDraft = createConversionSettingsDraft({
       nxPerUsd: 1_000,
-      nxPerSlot: 6_000,
-      mesosPerSlot: 30_000,
+      mesosPerNx: 5,
     });
     const nextDraft = updateConversionSettingsDraft(initialDraft, "mesosPerNx", "7");
 
     expect(nextDraft.mesosPerNx).toBe("7");
-    expect(nextDraft.mesosPerSlot).toBe("42000");
     expect(parseConversionSettingsDraft(nextDraft)).toEqual({
       nxPerUsd: 1_000,
-      nxPerSlot: 6_000,
-      mesosPerSlot: 42_000,
+      mesosPerNx: 7,
     });
   });
 
-  it("recalculates the direct rate when slot values change", () => {
-    const initialDraft = createConversionSettingsDraft({
-      nxPerUsd: 1_000,
-      nxPerSlot: 6_000,
-      mesosPerSlot: 30_000,
-    });
-    const withNewMesos = updateConversionSettingsDraft(initialDraft, "mesosPerSlot", "42000");
-    const withNewNxSlot = updateConversionSettingsDraft(withNewMesos, "nxPerSlot", "7000");
+  it("updates the NX-per-USD rate without changing the ratio", () => {
+    const initialDraft = createConversionSettingsDraft(DEFAULT_CONVERSION_RATES);
+    const nextDraft = updateConversionSettingsDraft(initialDraft, "nxPerUsd", "2000");
 
-    expect(withNewMesos.mesosPerNx).toBe("7");
-    expect(withNewNxSlot.mesosPerNx).toBe("6");
-    expect(getDraftMesosPerNx(withNewNxSlot)).toBe(6);
+    expect(nextDraft.nxPerUsd).toBe("2000");
+    expect(nextDraft.mesosPerNx).toBe("10");
   });
 
-  it("invalidates dependent values when the direct rate cannot be calculated", () => {
+  it("rejects incomplete drafts", () => {
     const initialDraft = createConversionSettingsDraft(DEFAULT_CONVERSION_RATES);
-    const nextDraft = updateConversionSettingsDraft(initialDraft, "mesosPerNx", "");
+    const missingRatio = updateConversionSettingsDraft(initialDraft, "mesosPerNx", "");
 
-    expect(nextDraft.mesosPerSlot).toBe("");
-    expect(parseConversionSettingsDraft(nextDraft)).toBeNull();
-    expect(getDraftMesosPerNx(nextDraft)).toBeNull();
-  });
-
-  it("derives the NX-to-mesos relation without depending on the dollar rate", () => {
-    const initialDraft = createConversionSettingsDraft(DEFAULT_CONVERSION_RATES);
-    const nextDraft = updateConversionSettingsDraft(initialDraft, "nxPerUsd", "");
-
-    expect(getDraftMesosPerNx(nextDraft)).toBe(9);
+    expect(parseConversionSettingsDraft(missingRatio)).toBeNull();
   });
 });

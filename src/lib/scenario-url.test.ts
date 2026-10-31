@@ -42,19 +42,18 @@ describe("scenario URL", () => {
   it("serializes custom conversion rates", () => {
     const params = buildScenarioSearchParams({
       ...defaultState,
-      rates: { nxPerUsd: 2_000, nxPerSlot: 6_000, mesosPerSlot: 30_000 },
+      rates: { nxPerUsd: 2_000, mesosPerNx: 5 },
     });
 
     expect(Object.fromEntries(params)).toEqual({
       nxPerUsd: "2000",
-      nxPerSlot: "6000",
-      mesosPerSlot: "30000",
+      mesosPerNx: "5",
     });
   });
 
   it("parses a shared scenario", () => {
     const overrides = parseScenarioSearchParams(
-      "?amount=5000&unit=mesos&currency=0&rate=6.2&nxPerUsd=2000&nxPerSlot=6000&mesosPerSlot=30000",
+      "?amount=5000&unit=mesos&currency=0&rate=6.2&nxPerUsd=2000&mesosPerNx=5",
     );
 
     expect(overrides).toEqual({
@@ -62,8 +61,14 @@ describe("scenario URL", () => {
       sourceUnit: "mesos",
       currencyEnabled: false,
       exchangeRateCanonical: "6.2",
-      rates: { nxPerUsd: 2_000, nxPerSlot: 6_000, mesosPerSlot: 30_000 },
+      rates: { nxPerUsd: 2_000, mesosPerNx: 5 },
     });
+  });
+
+  it("parses legacy slot-based scenarios", () => {
+    const overrides = parseScenarioSearchParams("?nxPerUsd=2000&nxPerSlot=6000&mesosPerSlot=30000");
+
+    expect(overrides.rates).toEqual({ nxPerUsd: 2_000, mesosPerNx: 5 });
   });
 
   it("ignores invalid or incomplete values", () => {

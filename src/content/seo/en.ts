@@ -92,7 +92,7 @@ export const EN_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
           "Yes. The calculator accepts large values and keeps the calculation internally precise.",
       },
     ],
-    related: ["mesosToNx", "howToConvert", "slotGuide", "faq"],
+    related: ["mesosToNx", "howToConvert", "ratioGuide", "faq"],
     examples: { sourceUnit: "nx", amounts: [1_000, 5_000, 10_000], targetUnits: ["mesos"] },
   },
 
@@ -109,7 +109,7 @@ export const EN_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
         heading: "How to convert",
         paragraphs: [
           "Select Mesos as the input unit, enter an amount, and review the NX result.",
-          "The relationship is defined by the NX-per-slot and mesos-per-slot rates configured in the converter.",
+          "The relationship is defined by the mesos-per-NX rate configured in the converter.",
         ],
       },
       {
@@ -315,7 +315,7 @@ export const EN_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
   howToConvert: {
     title: "How to Convert NX to Mesos — Guide",
     description:
-      "Learn how to convert NX to mesos using your server's rates, including slots and exchange rates.",
+      "Learn how to convert NX to mesos using your server's rates, including the mesos-per-NX rate and exchange rates.",
     h1: "How to convert NX to mesos",
     intro:
       "The conversion depends on your server's rates. The most reliable approach is a calculator with adjustable rates.",
@@ -324,7 +324,7 @@ export const EN_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
       {
         heading: "Understand the relationship",
         paragraphs: [
-          "The converter uses NX per slot and mesos per slot to calculate the relationship between NX and mesos.",
+          "The converter uses the mesos-per-NX rate to calculate the relationship between NX and mesos.",
           "If your server uses a different relationship, adjust the values in Settings before converting.",
         ],
       },
@@ -345,8 +345,7 @@ export const EN_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
     faqs: [
       {
         question: "What is the conversion formula?",
-        answer:
-          "The NX-to-mesos relationship is calculated from the NX-per-slot and mesos-per-slot rates.",
+        answer: "The NX-to-mesos relationship is calculated from the mesos-per-NX rate.",
       },
       {
         question: "Do I need the dollar rate?",
@@ -357,29 +356,26 @@ export const EN_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
         answer: "It is consistent with the rates you configure. Wrong rates produce wrong results.",
       },
     ],
-    related: ["nxToMesos", "slotGuide", "whatIsNx", "faq"],
+    related: ["nxToMesos", "ratioGuide", "whatIsNx", "faq"],
   },
 
-  slotGuide: {
-    title: "How to Calculate Slots in NX and Mesos — Guide",
-    description:
-      "Understand how to use NX-per-slot and mesos-per-slot rates for MapleStory conversions.",
-    h1: "How to calculate slots in NX and mesos",
+  ratioGuide: {
+    title: "How to Calculate the NX-to-Mesos Ratio — Guide",
+    description: "Understand how to use the mesos-per-NX rate for MapleStory conversions.",
+    h1: "How to calculate the NX-to-mesos ratio",
     intro:
-      "Slots can be used as a reference to define the relationship between NX and mesos. The value depends on your server's rates.",
+      "The mesos-per-NX rate defines how many mesos equal 1 NX. The value depends on your server.",
     sourceUnit: "nx",
     sections: [
       {
-        heading: "What a slot rate means",
+        heading: "What the rate means",
         paragraphs: [
-          "The converter lets you enter how many NX and how many mesos correspond to one slot. It then calculates the relationship between currencies.",
+          "The converter uses the mesos-per-NX rate to calculate the relationship between currencies.",
         ],
       },
       {
         heading: "Adjust the values",
-        paragraphs: [
-          "Open Settings and enter your server's values. If you already know the direct NX-to-mesos relationship, you can adjust that as well.",
-        ],
+        paragraphs: ["Open Settings and enter your server's mesos-per-NX rate."],
       },
       {
         heading: "There is no universal value",
@@ -390,17 +386,17 @@ export const EN_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
     ],
     faqs: [
       {
-        question: "What is a slot?",
+        question: "What is the mesos-per-NX rate?",
         answer:
-          "In this converter, a slot is a reference used to define how many NX and mesos are part of the conversion rate.",
+          "It is the amount of mesos equivalent to 1 NX used in the converter's calculations.",
       },
       {
-        question: "How many mesos is one slot?",
-        answer: "It depends on the configured mesos-per-slot rate.",
+        question: "How many mesos is 1 NX?",
+        answer: "It depends on the configured mesos-per-NX rate.",
       },
       {
-        question: "How many NX is one slot?",
-        answer: "It depends on the configured NX-per-slot rate.",
+        question: "How many NX is 1 meso?",
+        answer: "It is the inverse of the configured mesos-per-NX rate.",
       },
     ],
     related: ["nxToMesos", "howToConvert", "whatAreMesos", "faq"],
@@ -409,7 +405,7 @@ export const EN_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
   guideHub: {
     title: "NX and Mesos Guides — MapleStory",
     description:
-      "Guides about NX, mesos, slots, and conversions for MapleStory, with an adjustable calculator.",
+      "Guides about NX, mesos, and conversions for MapleStory, with an adjustable calculator.",
     h1: "NX and Mesos Guides",
     intro: "Understand MapleStory currencies and use the calculator with your server's rates.",
     sourceUnit: "nx",
@@ -417,7 +413,7 @@ export const EN_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
       {
         heading: "Start here",
         paragraphs: [
-          "Learn what NX is, what mesos are, and how slot rates can help you compare values.",
+          "Learn what NX is, what mesos are, and how the mesos-per-NX rate can help you compare values.",
         ],
       },
       {
@@ -432,7 +428,7 @@ export const EN_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
       "whatIsNx",
       "whatAreMesos",
       "howToConvert",
-      "slotGuide",
+      "ratioGuide",
       "nxToMesos",
       "mesosToNx",
       "nxToUsd",
@@ -444,7 +440,7 @@ export const EN_SEO_PAGES: Record<SeoPageKey, SeoPageContent> = {
   faq: {
     title: "Frequently Asked Questions — NX Mesos Converter",
     description:
-      "Answers about NX, mesos, dollars, slots, and adjustable rates for MapleStory conversions.",
+      "Answers about NX, mesos, dollars, and adjustable rates for MapleStory conversions.",
     h1: "Frequently asked questions",
     intro: "Quick answers about the converter, currencies, and the rates used in calculations.",
     sourceUnit: "nx",
